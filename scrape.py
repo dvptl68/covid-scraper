@@ -12,10 +12,10 @@ mainTable = getData(url).find(id='thetable')
 data = {}
 
 # Find worldwide data and add to dict
-data.update({'worldwide': list(map(lambda x:x.getText(strip=True), mainTable.find(class_='sorttop').findAll('th')[2:]))[:3]})
+data.update({'World': list(map(lambda x:x.getText(strip=True), mainTable.find(class_='sorttop').findAll('th')[2:]))[:3]})
 
 # Iterate through all countries in the table
-for element in mainTable.find('tbody').findAll('tr'):
-  pass
+for element in mainTable.find('tbody').findAll('tr')[2:-2]:
+  data.update({element.find('a').getText(strip=True): list(map(lambda x:x.getText(strip=True), element.findAll('td')[:3]))[:3]})
 
-print(data)
+for key in data: print(key + ': ' + '; '.join(data[key]))
