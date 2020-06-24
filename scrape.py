@@ -1,24 +1,23 @@
 import requests
 from bs4 import BeautifulSoup
+import json
 
 # Returns a bs4 object with the parsed HTML from the iven URL
 def getData(url): return BeautifulSoup(requests.get(url).content, 'html.parser')
 
-# Get HTML from Wikipedia COVID-19 data page
-url = 'https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data'
-# Get main data table
-mainTable = getData(url).find(id='thetable')
-# Dict to store all data
-data = {}
+# Get main data table from Wikipedia COVID-19 page
+countryTable = getData('https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data').find('table')
+# Dict to store all country data
+countryData = {}
 
 # Find worldwide data and add to dict
-data.update({'World': list(map(lambda x:x.getText(strip=True), mainTable.find(class_='sorttop').findAll('th')[2:]))[:3]})
+countryData.update({'World': list(map(lambda x:x.getText(strip=True), countryTable.find(class_='sorttop').findAll('th')[2:]))[:3]})
 
 # Iterate through all countries in the table, adding each country name and data to dict
-for element in mainTable.find('tbody').findAll('tr')[2:-2]:
-  data.update({element.find('a').getText(strip=True): list(map(lambda x:x.getText(strip=True), element.findAll('td')[:3]))[:3]})
+for element in countryTable.find('tbody').findAll('tr')[2:-2]:
+  countryData.update({element.find('a').getText(strip=True): list(map(lambda x:x.getText(strip=True), element.findAll('td')[:3]))[:3]})
 
-# for key in data: print(key + ': ' + '; '.join(data[key]))
+# for key in countryData: print(key + ': ' + '; '.join(data[key]))
 
 # List to store all US states
 states = []
@@ -29,3 +28,16 @@ try:
   states = list(stateNames.read().split('\n'))
 finally:
   stateNames.close()
+
+counties = {}
+for state in states:
+  counties[state] = []
+  countyTable = getData(f'https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data/{state}_medical_cases_by_county').find('table').find('tbody')
+  for element in countyTable.findAll('tr')[2:-2]:
+    if len(element.findAll('th')) == 0:
+      counties[state].append(element.find('td').getText(strip=True))
+    else:
+      counties[state].append(element.find('th').getText(strip=True))
+
+with open('locations/us-counties.json', 'w') as countyOut:
+  countyOut.write(json.dumps(counties, indent=2, sort_keys=True))
