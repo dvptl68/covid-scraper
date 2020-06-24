@@ -14,8 +14,10 @@ data = {}
 # Find worldwide data and add to dict
 data.update({'World': list(map(lambda x:x.getText(strip=True), mainTable.find(class_='sorttop').findAll('th')[2:]))[:3]})
 
-# Iterate through all countries in the table
+# Iterate through all countries in the table, adding each country name and data to dict
 for element in mainTable.find('tbody').findAll('tr')[2:-2]:
   data.update({element.find('a').getText(strip=True): list(map(lambda x:x.getText(strip=True), element.findAll('td')[:3]))[:3]})
 
-for key in data: print(key + ': ' + '; '.join(data[key]))
+# for key in data: print(key + ': ' + '; '.join(data[key]))
+
+# List to store all US states
