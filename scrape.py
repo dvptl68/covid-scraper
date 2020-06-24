@@ -30,11 +30,17 @@ finally:
 # Dict to store all county data
 countyData = {}
 
+# Iterate through all states, getting total data
+usTable = getData('https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data/United_States_medical_cases_by_state').find('table').find('tbody')
+for element in usTable.findAll('tr')[2:-2]:
+
+  # Check if the state is listed before adding data to dict
+  stateName = element.findAll('th')[1].getText(strip=True)
+  if stateName in states:
+    countyData[stateName] = {'Total': list(map(lambda x:x.getText(strip=True), element.findAll('td')[:3]))[:3]}
+
 # Iterate through all states, getting county information
 for state in states:
-
-  # Create key-value pair for the state
-  countyData[state] = {}
 
   # Set the name of the sections depending on the state
   extension = 'county'
@@ -46,7 +52,8 @@ for state in states:
     extension = 'municipality'
   
   # Get main data table from Wikipedia COVID-19 page for each state
-  countyTable = getData(f'https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data/{state}_medical_cases_by_{extension}').find('table').find('tbody')
+  searchState = 'Georgia (U.S. state)' if state == 'Georgia' else state
+  countyTable = getData(f'https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data/{searchState}_medical_cases_by_{extension}').find('table').find('tbody')
 
   # Iterate through all sections in table, adding each name and data to dict
   for element in countyTable.findAll('tr')[2:-1 if state == 'Texas' or state == 'West Virginia' or state == 'Wisconsin' else -2]:
@@ -73,4 +80,4 @@ for state in states:
       countyData[state].update({countyName: countyNumbers})
 
 with open('locations/test.json', 'w') as countyOut:
-  countyOut.write(json.dumps(countyData, indent=2, sort_keys=True))
+  countyOut.write(json.dumps(countyData, indent=2))
