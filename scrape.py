@@ -35,7 +35,14 @@ counties = {}
 # Iterate through all states, getting county information
 for state in states:
   counties[state] = []
-  countyTable = getData(f'https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data/{state}_medical_cases_by_county').find('table').find('tbody')
+  extension = 'county'
+  if state == 'Alaska':
+    extension = 'borough'
+  elif state == 'Louisiana':
+    extension = 'parish'
+  elif state == 'Rhode Island':
+    extension = 'municipality'
+  countyTable = getData(f'https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data/{state}_medical_cases_by_{extension}').find('table').find('tbody')
   for element in countyTable.findAll('tr')[2:-1 if state == 'Texas' or state == 'West Virginia' or state == 'Wisconsin' else -2]:      
     text = ''
     if len(element.findAll('th')) == 0:
