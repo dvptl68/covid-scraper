@@ -27,6 +27,13 @@ try:
 finally:
   stateNames.close()
 
+# Dict to store all U.S. counties
+allCounties = {}
+
+# Fill counties dict with data from file
+with open('locations/us-counties.json') as countyFile:
+  allCounties = json.load(countyFile)
+
 # Dict to store all county data
 countyData = {}
 
@@ -69,15 +76,20 @@ for state in states:
         countyName = element.findAll('th')[1].getText(strip=True)
       else:
         countyName = element.find('th').getText(strip=True)
+
+    # Remove Wikipedia annotations from name
+    try:
+      countyName = countyName[:countyName.index('[')]
+    except: pass
     
+    # Skip rest of loop if retrieved name is not a county
+    if countyName not in allCounties[state]: continue
+
     # Check table for inconsistencies before retrieving county data
     countyNumbers = list(map(lambda x:x.getText(strip=True), element.findAll('td')[:3]))[:3]
 
-    # Remove Wikipedia annotations from name before adding to dict
-    try:
-      countyData[state].update({countyName[:countyName.index('[')]: countyNumbers})
-    except:
-      countyData[state].update({countyName: countyNumbers})
+    # Add county name and data to dict
+    countyData[state].update({countyName: countyNumbers})
 
-with open('locations/test.json', 'w') as countyOut:
-  countyOut.write(json.dumps(countyData, indent=2))
+with open('locations/test.json', 'w') as out:
+  out.write(json.dumps(countyData, indent=2))
