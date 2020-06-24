@@ -21,3 +21,11 @@ for element in mainTable.find('tbody').findAll('tr')[2:-2]:
 # for key in data: print(key + ': ' + '; '.join(data[key]))
 
 # List to store all US states
+states = []
+
+# Fill states list with data from file
+try:
+  stateNames = open('locations/us-states.txt', 'r', encoding = 'utf-8')
+  states = list(stateNames.read().split('\n'))
+finally:
+  stateNames.close()
