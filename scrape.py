@@ -11,28 +11,21 @@ countryTable = getData('https://en.wikipedia.org/wiki/Template:COVID-19_pandemic
 countryData = {}
 
 # Find worldwide data and add to dict
-countryData.update({'World': list(map(lambda x:x.getText(strip=True), countryTable.find(class_='sorttop').findAll('th')[2:]))[:3]})
+countryData.update({'World': list(map(lambda x: x.getText(strip=True), countryTable.find(class_='sorttop').findAll('th')[2:]))[:3]})
 
 # Iterate through all countries in the table, adding each country name and data to dict
 for element in countryTable.find('tbody').findAll('tr')[2:-2]:
-  countryData.update({element.find('a').getText(strip=True): list(map(lambda x:x.getText(strip=True), element.findAll('td')[:3]))[:3]})
+  countryData.update({element.find('a').getText(strip=True): list(map(lambda x: x.getText(strip=True), element.findAll('td')[:3]))[:3]})
 
-# List to store all US states
-states = []
-
-# Fill states list with data from file
-try:
-  stateNames = open('locations/us-states.txt', 'r', encoding = 'utf-8')
-  states = list(stateNames.read().split('\n'))
-finally:
-  stateNames.close()
+# Dist to store all US states
+states = {}
+# Fill states dict with data from file
+with open('locations/us-states.json') as stateFile: states = json.load(stateFile)
 
 # Dict to store all U.S. counties
 allCounties = {}
-
 # Fill counties dict with data from file
-with open('locations/us-counties.json') as countyFile:
-  allCounties = json.load(countyFile)
+with open('locations/us-counties.json') as countyFile: allCounties = json.load(countyFile)
 
 # Dict to store all county data
 countyData = {}
@@ -43,20 +36,17 @@ for element in usTable.findAll('tr')[2:-2]:
 
   # Check if the state is listed before adding data to dict
   stateName = element.findAll('th')[1].getText(strip=True)
-  if stateName in states:
-    countyData[stateName] = {'Total': list(map(lambda x:x.getText(strip=True), element.findAll('td')[:3]))[:3]}
+  if stateName in states.keys():
+    countyData[stateName] = {'Total': list(map(lambda x: x.getText(strip=True), element.findAll('td')[:3]))[:3]}
 
 # Iterate through all states, getting county information
-for state in states:
+for state in states.keys():
 
   # Set the name of the sections depending on the state
   extension = 'county'
-  if state == 'Alaska':
-    extension = 'borough'
-  elif state == 'Louisiana':
-    extension = 'parish'
-  elif state == 'Rhode Island':
-    extension = 'municipality'
+  if state == 'Alaska': extension = 'borough'
+  elif state == 'Louisiana': extension = 'parish'
+  elif state == 'Rhode Island': extension = 'municipality'
   
   # Get main data table from Wikipedia COVID-19 page for each state
   searchState = 'Georgia (U.S. state)' if state == 'Georgia' else state
@@ -78,18 +68,18 @@ for state in states:
         countyName = element.find('th').getText(strip=True)
 
     # Remove Wikipedia annotations from name
-    try:
-      countyName = countyName[:countyName.index('[')]
+    try: countyName = countyName[:countyName.index('[')]
     except: pass
     
     # Skip rest of loop if retrieved name is not a county
     if countyName not in allCounties[state]: continue
 
-    # Check table for inconsistencies before retrieving county data
-    countyNumbers = list(map(lambda x:x.getText(strip=True), element.findAll('td')[:3]))[:3]
+    # Retrieve county data
+    indices = states[state]
+    countyNumbers = []
+    for i in indices: countyNumbers.append(element.findAll('td')[i].getText(strip=True) if i > -1 else 'No data')
 
     # Add county name and data to dict
     countyData[state].update({countyName: countyNumbers})
 
-with open('locations/test.json', 'w') as out:
-  out.write(json.dumps(countyData, indent=2))
+with open('locations/test.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
