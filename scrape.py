@@ -11,7 +11,7 @@ countryTable = getData('https://en.wikipedia.org/wiki/Template:COVID-19_pandemic
 countryData = {}
 
 # Find worldwide data and add to dict
-countryData.update({'World': list(map(lambda x: x.getText(strip=True), countryTable.find(class_='sorttop').findAll('th')[2:]))[:3]})
+countryData.update({'Total': list(map(lambda x: x.getText(strip=True), countryTable.find(class_='sorttop').findAll('th')[2:]))[:3]})
 
 # Iterate through all countries in the table, adding each country name and data to dict
 for element in countryTable.find('tbody').findAll('tr')[2:-2]:
@@ -77,9 +77,11 @@ for state in states.keys():
     # Retrieve county data
     indices = states[state]
     countyNumbers = []
-    for i in indices: countyNumbers.append(element.findAll('td')[i].getText(strip=True) if i > -1 else 'No data')
+    for i in indices: countyNumbers.append(element.findAll('td')[i].getText(strip=True) if i > -1 else '-')
 
     # Add county name and data to dict
     countyData[state].update({countyName: countyNumbers})
 
-with open('locations/test.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
+# Write data to JSON files
+with open('data/country-data.json', 'w') as out: out.write(json.dumps(countryData, indent=2))
+with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
