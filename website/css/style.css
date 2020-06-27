@@ -15,7 +15,9 @@ html {
 
 #title {
   font-family: 'Krona One';
-  color: white
+  color: white;
+  width: 100%;
+  text-align: center;
 }
 
 #title-block {
@@ -25,4 +27,17 @@ html {
   width: 100%;
   height: 80px;
   background-color: blue;
+}
+
+#info {
+  font-family: 'Krona One';
+  width: 100%;
+  text-align: center;
+}
+
+#info-block {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100%;
 }
