@@ -17,12 +17,6 @@ html {
   background-color: #9FBAD3;
 }
 
-.horizontal-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
 #title {
   font-family: 'Krona One';
   color: white;
@@ -54,3 +48,28 @@ html {
   background-color: #2796C2;
 }
 
+#selection-block {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+#selections {
+  width: 100%;
+  text-align: center;
+}
+
+.labels {
+  font-family: 'Krona One';
+  font-size: 25px;
+}
+
+.inputs {
+  font-family: 'Krona One';
+  font-size: 20px;
+  width: 500px;
+  padding: 7px 10px;
+  border: 1px solid #2796C2;
+  border-radius: 4px;
+}
