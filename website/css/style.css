@@ -31,19 +31,36 @@ html {
 
 #title {
   font-family: 'Krona One';
+  font-size: 33px;
+  margin: 22px 0px;
   color: white;
+  width: 100%;
+  text-align: center;
 }
 
 #title-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
   background-color: #234574;
 }
 
 #info {
   font-family: 'Krona One';
+  font-size: 24px;
+  margin: 20px 0px;
   color: white;
+  width: 100%;
+  text-align: center;
 }
 
 #info-block {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: auto;
   background-color: #2796C2;
 }
 
