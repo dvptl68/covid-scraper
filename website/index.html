@@ -2,57 +2,65 @@
 
 <html>
 
-  <head>
+<head>
 
-    <!-- Title of webpage -->
-    <title>Daily COVID-19 Reports</title>
+  <!-- Title of webpage -->
+  <title>Daily COVID-19 Reports</title>
 
-    <!-- SEO tags -->
-    <meta name='description' content=''>
-    <meta name='robots' content='index, nofollow' />
-    <meta charset="utf-8"/>
+  <!-- SEO tags -->
+  <meta name='description' content=''>
+  <meta name='robots' content='index, nofollow' />
+  <meta charset="utf-8" />
 
-    <!-- Import custom stylesheet -->
-    <link href='css/style.css' type='text/css' rel='stylesheet'>
+  <!-- Import custom stylesheet -->
+  <link href='css/style.css' type='text/css' rel='stylesheet'>
 
-    <!-- Import Bootstrap stylesheet -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="css/bootstrap/bootstrap.css" type="text/css" rel="stylesheet" >
+  <!-- Import Bootstrap stylesheet -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="css/bootstrap/bootstrap.css" type="text/css" rel="stylesheet">
 
-  </head>
+</head>
 
-  <body>
+<body>
 
-    <!-- Title block -->
-    <div id='title-block'>
-      <h1 id='title'>Daily COVID-19 Reports</h1>
+  <!-- Title block -->
+  <div id='title-block'>
+    <h1 id='title'>Daily COVID-19 Reports</h1>
+  </div>
+
+  <!-- Info block -->
+  <div id='info-block'>
+    <h2 id='info'>Enter your email below and select locations to recieve daily COVID-19 data reports!</h2>
+  </div>
+
+  <!-- Container for webpage contents -->
+  <div class='container-fluid'>
+
+    <div class='row'>
+
+      <!-- Selection block -->
+      <div id='selection-block'>
+
+        <!-- Form for user to enter information -->
+        <form id='selections'>
+
+          <!-- Email address input -->
+          <label for='fname' class='labels'>Email address:</label>
+          <input type='text' name='fname' placeholder='example@domain.com' id='fname' class='inputs'>
+
+          <!-- <input type="submit" value="Submit"> -->
+
+        </form>
+
+      </div>
+
     </div>
 
-    <!-- Info block -->
-    <div id='info-block'>
-      <h2 id='info'>Enter your email below and select locations to recieve daily COVID-19 data reports!</h2>
-    </div>
+  </div>
 
-    <!-- Selection block -->
-    <div id='selection-block'>
+  <!-- Import JS script -->
+  <script src="js/script.js" defer></script>
 
-      <!-- Form for user to enter information -->
-      <form id='selections'>
-        
-        <!-- Email address input -->
-        <label for='fname' class='labels'>Email address:</label>
-        <input type='text' name='fname' placeholder='example@domain.com' id='fname' class='inputs'>
-
-        <!-- <input type="submit" value="Submit"> -->
-
-      </form>
-
-    </div>
-
-    <!-- Import JS script -->
-    <script src="js/script.js" defer></script>
-
-  </body>
+</body>
 
 </html>

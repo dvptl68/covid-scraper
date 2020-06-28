@@ -12,7 +12,7 @@ const setPositions = () => {
 };
 
 // Set initial position of elements
-setPositions();
+// setPositions();
 
 // Set position of elements on window resize
-window.onresize = setPositions;
+// window.onresize = setPositions;

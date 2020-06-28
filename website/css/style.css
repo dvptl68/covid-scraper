@@ -12,6 +12,18 @@ Color scheme:
 #DE985E
 */
 
+[class*="container"] {
+  border: 2px black solid;
+}
+
+.row {
+  border: 2px red solid;
+}
+
+[class*="col"] {
+  border: 2px blue solid;
+}
+
 html {
   user-select: none;
   background-color: #9FBAD3;
@@ -20,44 +32,19 @@ html {
 #title {
   font-family: 'Krona One';
   color: white;
-  width: 100%;
-  text-align: center;
 }
 
 #title-block {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
   background-color: #234574;
 }
 
 #info {
   font-family: 'Krona One';
   color: white;
-  width: 100%;
-  text-align: center;
 }
 
 #info-block {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: auto;
   background-color: #2796C2;
-}
-
-#selection-block {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: auto;
-}
-
-#selections {
-  width: 100%;
-  text-align: center;
 }
 
 .labels {
