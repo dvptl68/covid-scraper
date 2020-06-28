@@ -4,11 +4,11 @@ const setPositions = () => {
   // Get elements that need to be styled
   const titleBlock = document.getElementById('title-block');
   const infoBlock = document.getElementById('info-block');
-  const formBlock = document.getElementById('selection-block');
+  const mainContainer = document.getElementById('main-container');
 
   // Set vertical position of elements
   infoBlock.style.top = `${titleBlock.clientHeight}px`;
-  formBlock.style.top = `${titleBlock.clientHeight + infoBlock.clientHeight + 50}px`
+  mainContainer.style.top = `${titleBlock.clientHeight + infoBlock.clientHeight}px`
 };
 
 // Set initial position of elements
