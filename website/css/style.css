@@ -83,3 +83,17 @@ html {
 #main-container {
   position: absolute;
 }
+
+#submit-button {
+  font-family: 'Krona One';
+  font-size: 25px;
+  background-color: #2796C2;
+  padding: 10px 15px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+#submit-button:hover {
+  background-color: #1F789C;
+}
