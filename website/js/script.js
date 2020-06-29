@@ -54,11 +54,25 @@ const stateRow = document.getElementById('state-row');
 const countyRow = document.getElementById('county-row');
 
 // Change display based on country selections made
-document.getElementById('country-select').addEventListener('change', event => {
+countrySelect.addEventListener('change', event => {
 
-  // Enable/disable email selection box based on the selected country
-  if (event.target.value === '') {
-    document.getElementById('email').value = '';
-  }
+  // Hide/show state and county selection based on the selected country
+  stateRow.style.display = (event.target.value === 'United States') ? 'flex' : 'none';
+  countyRow.style.display = 'none';
+
+  // Reset selections
+  stateSelect.children[0].selected = true;
+
+  // Enable/disable email input box based on the selected country
   document.getElementById('email').disabled = event.target.value == '';
+});
+
+// Change display based on state selections made
+stateSelect.addEventListener('change', event => {
+  
+  // Hide/show county selection based on the selected state
+  countyRow.style.display = (event.target.value !== '') ? 'flex' : 'none';
+
+  // Set county selection label text
+  if (event.target.value !== '') document.getElementById('county-label').innerHTML = `County in ${event.target.value} (optional):`;
 });
