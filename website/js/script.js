@@ -17,14 +17,24 @@ setPositions();
 // Set position of elements on window resize
 window.onresize = setPositions;
 
-// Form DOM element
+// Get form and email label elements
 const form = document.getElementById('selections')
+const email = document.getElementById('email-label');
 
 // Function that creates a country selection list
 const createCountryList = () => {
 
+  // Row for contents
+  const row = document.createElement('DIV');
+  row.classList.add('row');
+
+  // Column for contents
+  const col = document.createElement('DIV');
+  col.classList.add('col-auto');
+
   // Create label for selection list
   const label = document.createElement('LABEL');
+  label.classList.add('labels');
   label.innerHTML = 'Country: ';
 
   // Create selection list
@@ -37,9 +47,23 @@ const createCountryList = () => {
     list.appendChild(opt);
   });
 
+  // Separator columns
+  const colLeft = document.createElement('DIV');
+  colLeft.classList.add('col');
+  const colRight = document.createElement('DIV');
+  colRight.classList.add('col');
+
+  // Append all column elements
+  col.appendChild(label);
+  col.appendChild(list);
+
+  // Append all row elements
+  row.appendChild(colLeft);
+  row.appendChild(col);
+  row.appendChild(colRight);
+
   // Add label and list to form
-  form.appendChild(label);
-  form.appendChild(list);
+  form.insertBefore(row, email);
 };
 
 createCountryList();

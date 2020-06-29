@@ -42,35 +42,35 @@
     <!-- Separator row -->
     <div class='row' style='height: 50px'></div>
 
-    <!-- Main row for form -->
-    <div class='row'>
+    <!-- Form for user to enter information -->
+    <form id='selections'>
 
-      <!-- Separator column -->
-      <div class='col'></div>
+      <div class='row' id='email-label'>
 
-      <!-- Main column for form -->
-      <div class='col-auto'>
+        <!-- Separator column -->
+        <div class='col'></div>
 
-        <!-- Form for user to enter information -->
-        <form id='selections'>
+        <!-- Row for email address -->
+        <div class='col-auto'>
 
           <!-- Email address input -->
           <label for='fname' class='labels'>Email address:</label>
           <input type='text' name='fname' placeholder='example@domain.com' id='fname' class='inputs'>
 
-          <!-- <input type="submit" value="Submit"> -->
+        </div>
 
-        </form>
+        <!-- Separator column -->
+        <div class='col'></div>
 
       </div>
+      <!-- <input type="submit" value="Submit"> -->
 
-      <!-- Separator column -->
-      <div class='col'></div>
-
-    </div>
+    </form>
 
   </div>
-  
+
+  </div>
+
   <!-- Import data files as scripts -->
   <script src='locations/countries.jsonp'></script>
   <script src='locations/us-states.jsonp'></script>
