@@ -33,7 +33,7 @@
 
   <!-- Info block -->
   <div id='info-block'>
-    <h2 id='info'>Enter your email below and select locations to recieve daily COVID-19 data reports!</h2>
+    <h2 id='info'>Enter your email below and select a location to recieve daily COVID-19 data reports!</h2>
   </div>
 
   <!-- Main container for webpage contents -->
@@ -45,17 +45,38 @@
     <!-- Form for user to enter information -->
     <form id='selections'>
 
-      <div class='row' id='email-label'>
+      <div class='row'>
 
         <!-- Separator column -->
         <div class='col'></div>
 
-        <!-- Row for email address -->
+        <!-- Column for country selection -->
+        <div class='col-auto'>
+
+          <!-- Country selection -->
+          <label class='labels'>Country:</label>
+          <select id='country-select' class='lists'>
+
+          </select>
+
+        </div>
+
+        <!-- Separator column -->
+        <div class='col'></div>
+
+      </div>
+
+      <div class='row' id='email-row'>
+
+        <!-- Separator column -->
+        <div class='col'></div>
+
+        <!-- Column for email address -->
         <div class='col-auto'>
 
           <!-- Email address input -->
-          <label for='fname' class='labels'>Email address:</label>
-          <input type='text' name='fname' placeholder='example@domain.com' id='fname' class='inputs'>
+          <label class='labels'>Email address:</label>
+          <input type='text' placeholder='example@domain.com' id='email' class='inputs' disabled>
 
         </div>
 

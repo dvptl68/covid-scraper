@@ -64,10 +64,20 @@ html {
 }
 
 .inputs {
-  font-family: 'Krona One';
   font-size: 20px;
   width: 500px;
   padding: 7px 10px;
+  padding-top: 4px;
+  margin-left: 5px;
+  border: 1px solid #2796C2;
+  border-radius: 4px;
+}
+
+.lists {
+  font-size: 20px;
+  width: 260px;
+  padding: 7px 10px;
+  margin-left: 10px;
   border: 1px solid #2796C2;
   border-radius: 4px;
 }

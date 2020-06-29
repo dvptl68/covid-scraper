@@ -17,53 +17,26 @@ setPositions();
 // Set position of elements on window resize
 window.onresize = setPositions;
 
-// Get form and email label elements
-const form = document.getElementById('selections')
-const email = document.getElementById('email-label');
+// Get country selection list
+const countrySelect = document.getElementById('country-select')
 
-// Function that creates a country selection list
-const createCountryList = () => {
+// Add blank element to list
+countrySelect.appendChild(document.createElement('OPTION'))
 
-  // Row for contents
-  const row = document.createElement('DIV');
-  row.classList.add('row');
+// Iterate through the sorted countries, adding them to list
+countries.sort().forEach(country => {
+  const opt = document.createElement('OPTION')
+  opt.innerHTML = country;
+  countrySelect.appendChild(opt);
+});
 
-  // Column for contents
-  const col = document.createElement('DIV');
-  col.classList.add('col-auto');
 
-  // Create label for selection list
-  const label = document.createElement('LABEL');
-  label.classList.add('labels');
-  label.innerHTML = 'Country: ';
+// Change display based on country selections made
+document.getElementById('country-select').addEventListener('change', event => {
 
-  // Create selection list
-  const list = document.createElement('SELECT');
-
-  // Iterate through all countries, adding them to list
-  countries.forEach(e => {
-    const opt = document.createElement('OPTION')
-    opt.innerHTML = e;
-    list.appendChild(opt);
-  });
-
-  // Separator columns
-  const colLeft = document.createElement('DIV');
-  colLeft.classList.add('col');
-  const colRight = document.createElement('DIV');
-  colRight.classList.add('col');
-
-  // Append all column elements
-  col.appendChild(label);
-  col.appendChild(list);
-
-  // Append all row elements
-  row.appendChild(colLeft);
-  row.appendChild(col);
-  row.appendChild(colRight);
-
-  // Add label and list to form
-  form.insertBefore(row, email);
-};
-
-createCountryList();
+  // Enable/disable email selection box based on the selected country
+  if (event.target.value == '') {
+    document.getElementById('email').value = '';
+  }
+  document.getElementById('email').disabled = event.target.value == '';
+});
