@@ -8,7 +8,7 @@ const setPositions = () => {
 
   // Set vertical position of elements
   infoBlock.style.top = `${titleBlock.clientHeight}px`;
-  mainContainer.style.top = `${titleBlock.clientHeight + infoBlock.clientHeight}px`
+  mainContainer.style.top = `${titleBlock.clientHeight + infoBlock.clientHeight}px`;
 };
 
 // Set initial position of elements
@@ -16,3 +16,4 @@ setPositions();
 
 // Set position of elements on window resize
 window.onresize = setPositions;
+
