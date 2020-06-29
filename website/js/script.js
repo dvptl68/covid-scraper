@@ -69,16 +69,20 @@ const fillCounties = state => {
   });
 }
 
-// Get state and county rows
+// Get state and county rows and separators
 const stateRow = document.getElementById('state-row');
+const stateSep = document.getElementById('state-sep');
 const countyRow = document.getElementById('county-row');
+const countySep = document.getElementById('county-sep');
 
 // Change display based on country selections made
 countrySelect.addEventListener('change', event => {
 
   // Hide/show state and county selection based on the selected country
   stateRow.style.display = (event.target.value === 'United States') ? 'flex' : 'none';
+  stateSep.style.display = (event.target.value === 'United States') ? 'flex' : 'none';
   countyRow.style.display = 'none';
+  countySep.style.display = 'none';
 
   // Reset selections
   stateSelect.children[0].selected = true;
@@ -92,6 +96,7 @@ stateSelect.addEventListener('change', event => {
 
   // Hide/show county selection based on the selected state
   countyRow.style.display = (event.target.value !== '') ? 'flex' : 'none';
+  countySep.style.display = (event.target.value !== '') ? 'flex' : 'none';
 
   // Skip rest of function if selected state is none
   if (event.target.value === '') return;

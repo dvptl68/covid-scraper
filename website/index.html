@@ -11,7 +11,7 @@
   <link rel='shortcut icon' type='image/x-icon' href='images/icon.ico' />
 
   <!-- SEO -->
-  <meta name='description' content=''>
+  <meta name='description' content='Select a country, state, and county to recieve daily COVID-19 (coronavirus) data reports.'>
   <meta name='robots' content='index, nofollow' />
   <meta charset="utf-8" />
 
@@ -33,14 +33,14 @@
 
   <!-- Info block -->
   <div id='info-block'>
-    <h2 id='info'>Enter your email below and select a location to recieve daily COVID-19 data reports!</h2>
+    <h2 id='info'>Select a location and enter your email below to recieve daily COVID-19 data reports!</h2>
   </div>
 
   <!-- Main container for webpage contents -->
   <div id='main-container' class='container-fluid'>
 
     <!-- Separator row -->
-    <div class='row' style='height: 50px'></div>
+    <div class='row' style='height: 30px'></div>
 
     <!-- Form for user to enter information -->
     <form id='selections'>
@@ -66,6 +66,9 @@
 
       </div>
 
+      <!-- Separator row -->
+      <div id='state-sep' class='row' style='height: 20px; display: none'></div>
+
       <!-- Row for state selection -->
       <div id='state-row' class='row' style='display: none'>
 
@@ -87,6 +90,9 @@
 
       </div>
 
+      <!-- Separator row -->
+      <div id='county-sep' class='row' style='height: 20px; display: none'></div>
+
       <!-- Row for county selection -->
       <div id='county-row' class='row' style='display: none'>
 
@@ -107,6 +113,9 @@
         <div class='col'></div>
 
       </div>
+
+      <!-- Separator row -->
+      <div class='row' style='height: 30px'></div>
 
       <!-- Row for email input -->
       <div class='row' id='email-row'>
