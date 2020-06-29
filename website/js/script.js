@@ -36,10 +36,10 @@ countries.sort().forEach(country => {
   countrySelect.appendChild(opt);
 });
 
-//Get state selection list
+// Get state selection list
 const stateSelect = document.getElementById('state-select');
 
-//Add blank element to list
+// Add blank element to list
 stateSelect.appendChild(document.createElement('OPTION'));
 
 // Iterate through the sorted states, adding them to list
@@ -48,6 +48,26 @@ Object.keys(states).sort().forEach(state => {
   opt.innerHTML = state;
   stateSelect.appendChild(opt);
 });
+
+// Get county selection list
+const countySelect = document.getElementById('county-select');
+
+// Function that fills county selection list with correct counties
+const fillCounties = state => {
+
+  // Clear current list items
+  countySelect.innerHTML = '';
+
+  // Add blank element to list
+  countySelect.appendChild(document.createElement('OPTION'));
+
+  // Fill selection list with currect counties
+  counties[state].sort().forEach(county => {
+    const opt = document.createElement('OPTION')
+    opt.innerHTML = county;
+    countySelect.appendChild(opt);
+  });
+}
 
 // Get state and county rows
 const stateRow = document.getElementById('state-row');
@@ -69,10 +89,17 @@ countrySelect.addEventListener('change', event => {
 
 // Change display based on state selections made
 stateSelect.addEventListener('change', event => {
-  
+
   // Hide/show county selection based on the selected state
   countyRow.style.display = (event.target.value !== '') ? 'flex' : 'none';
 
-  // Set county selection label text
-  if (event.target.value !== '') document.getElementById('county-label').innerHTML = `County in ${event.target.value} (optional):`;
+  // Skip rest of function if selected state is none
+  if (event.target.value === '') return;
+
+  // Set county selection label text and fill selection list
+  document.getElementById('county-label').innerHTML = `County in ${event.target.value} (optional):`;
+  fillCounties(event.target.value);
+
+  // Reset selection
+  countySelect.children[0].selected = true;
 });
