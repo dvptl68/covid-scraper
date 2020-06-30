@@ -104,4 +104,41 @@ html {
   left: 50%;
   transform: translateX(-50%);
   width: 200px;
+  pointer-events: none;
+}
+
+#thank, #instruct{
+  font-family: 'Krona One';
+  font-size: 40px;
+  position: absolute;
+  top: 340px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#instruct {
+  font-size: 25px;
+  text-align: center;
+  width: 75%;
+  top: 420px;
+}
+
+#mainpage {
+  font-family: 'Krona One';
+  font-size: 25px;
+  background-color: #234574;
+  padding: 10px 15px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  position: absolute;
+  top: 540px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#mainpage:hover {
+  background-color: #182F4F;
 }
