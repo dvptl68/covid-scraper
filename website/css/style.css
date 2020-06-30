@@ -97,3 +97,11 @@ html {
 #submit-button:hover {
   background-color: #1F789C;
 }
+
+#checkmark {
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+}
