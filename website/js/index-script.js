@@ -1,6 +1,3 @@
-// Display page when it is done loading
-document.onreadystatechange = () => { if (document.readyState === 'complete') document.body.style.opacity = '1'; }
-
 // Function to set element positions
 const setPositions = () => {
 
