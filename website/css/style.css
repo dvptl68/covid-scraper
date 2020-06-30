@@ -137,6 +137,7 @@ html {
   transform: translateX(-50%);
   text-decoration: none;
   cursor: pointer;
+  outline: none;
 }
 
 #mainpage:hover {
