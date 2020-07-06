@@ -2,8 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+import email.message
 
 # Returns a bs4 object with the parsed HTML from the given URL
 def getData(url): return BeautifulSoup(requests.get(url).content, 'html.parser')
@@ -117,11 +116,12 @@ config = {}
 with open('config.json') as configFile: config = json.load(configFile)
 
 # Create email content
-message = MIMEMultipart()
+message = email.message.Message()
+message['Subject'] = 'test'
 message['From'] = config['address']
 message['To'] = config['address']
-message['Subject'] = 'test'
-message.attach(MIMEText('hello', 'plain'))
+message.add_header('Content-Type', 'text/html')
+message.set_payload('<h1>Hello</h1>')
 
 # Start server and log in to sender email
 server = smtplib.SMTP('smtp.gmail.com: 587')
