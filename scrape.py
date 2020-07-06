@@ -1,6 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 # Returns a bs4 object with the parsed HTML from the given URL
 def getData(url): return BeautifulSoup(requests.get(url).content, 'html.parser')
@@ -97,13 +100,34 @@ with open('locations/us-counties.json') as countyFile: allCounties = json.load(c
 
 # Get and store country data
 countryData = {}
-getCountryData(countryData)
+# getCountryData(countryData)
 
 # Get and store county data
 countyData = {}
-getStateData(countyData, states)
-getCountyData(countyData, states, allCounties)
+# getStateData(countyData, states)
+# getCountyData(countyData, states, allCounties)
 
 # Write data to JSON files
-with open('data/country-data.json', 'w') as out: out.write(json.dumps(countryData, indent=2))
-with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
+# with open('data/country-data.json', 'w') as out: out.write(json.dumps(countryData, indent=2))
+# with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
+
+# Dict to store email config data
+config = {}
+# Fill config with data from file
+with open('config.json') as configFile: config = json.load(configFile)
+
+# Create email content
+message = MIMEMultipart()
+message['From'] = config['address']
+message['To'] = config['address']
+message['Subject'] = 'test'
+message.attach(MIMEText('hello', 'plain'))
+
+# Start server and log in to sender email
+server = smtplib.SMTP('smtp.gmail.com: 587')
+server.starttls()
+server.login(message['From'], config['password'])
+
+# Send email and quit server
+server.sendmail(message['From'], message['To'], message.as_string())
+server.quit()
