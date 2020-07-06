@@ -73,9 +73,13 @@ def getCountyData(countyData, states, allCounties):
       # Skip rest of loop if retrieved name is not a county
       if countyName not in allCounties[state]: continue
 
+      # Skip the counties of Utah - data table is too convoluted
+      if state == 'Utah': continue
+
       # Retrieve county data
       indices = states[state]
       countyNumbers = []
+      print(countyName + ', ' + state)
       for i in indices: countyNumbers.append(element.findAll('td')[i].getText(strip=True) if i > -1 else '-')
 
       # Add county name and data to dict
