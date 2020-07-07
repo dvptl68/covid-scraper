@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import smtplib
+import imaplib
 import email.message
 import mysql.connector
 
@@ -120,6 +121,19 @@ def sendEmail(recipient, name, content):
   server.sendmail(message['From'], message['To'], message.as_string())
   server.quit()
 
+# Function to connect to database
+def connectDB():
+
+  # Establish connection
+  db = mysql.connector.connect(
+    host = config['db']['host'],
+    user = config['db']['user'],
+    password = config['db']['password'],
+    database = config['db']['database']
+  )
+
+  print(db)
+
 # Fill states dict with data from file
 with open('locations/us-states.json') as stateFile: states = json.load(stateFile)
 
@@ -131,14 +145,51 @@ countryData = {}
 countyData = {}
 
 # Scrape and store all data
-scrape(countyData, countryData, states, allCounties)
+# scrape(countyData, countryData, states, allCounties)
 
 # Fill config with data from file
 with open('config.json') as configFile: config = json.load(configFile)
 
-# db = mysql.connector.connect(
-#   host = config['db']['host'],
-#   user = config['db']['user'],
-#   password = config['db']['password'],
-#   database = config['db']['database']
-# )
+# Login to email account and select inbox
+imap = imaplib.IMAP4_SSL("imap.gmail.com")
+imap.login(config['address'], config['password'])
+status, messages = imap.select("INBOX")
+N = 10
+messages = int(messages[0])
+
+# Iterate through all emails in inbox
+for i in range(messages, messages-N, -1):
+
+  # Get message ID
+  res, msg = imap.fetch(str(i), "(RFC822)")
+
+  for response in msg:
+
+    if isinstance(response, tuple):
+
+      msg = email.message_from_bytes(response[1])
+
+      # Decode email subject
+      subject = email.header.decode_header(msg["Subject"])[0][0]
+
+      # Decode subject if it is byte code
+      if isinstance(subject, bytes): subject = subject.decode()
+
+      # Skip rest of loop if email is not from correct sender and not about new user registration
+      if msg.get('From') != config['name'] + ' <' + config['address'] + '>' or subject != 'new user registration': continue
+
+      # Iterate through email parts
+      for part in msg.walk():
+
+        # Get content type of email
+        content_type = part.get_content_type()
+
+        # Get email body
+        try: body = part.get_payload(decode=True).decode()
+        except: pass
+
+        # Print if content type is plain text
+        if content_type == "text/plain": print(body.strip())
+
+imap.close()
+imap.logout()
