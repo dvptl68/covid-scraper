@@ -82,60 +82,63 @@ def getCountyData(countyData, states, allCounties):
       # Retrieve county data
       indices = states[state]
       countyNumbers = []
-      print(countyName + ', ' + state)
+      # print(countyName + ', ' + state)
       for i in indices: countyNumbers.append(element.findAll('td')[i].getText(strip=True) if i > -1 else '-')
 
       # Add county name and data to dict
       countyData[state].update({countyName: countyNumbers})
 
-# Dict to store all US states
-states = {}
+# Function to scrape all data and store in files
+def scrape(countyData, countryData, states, allCounties):
+
+  # Scrape all data
+  getCountryData(countryData)
+  getStateData(countyData, states)
+  getCountyData(countyData, states, allCounties)
+
+  # Write data to JSON files
+  with open('data/country-data.json', 'w') as out: out.write(json.dumps(countryData, indent=2))
+  with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
+
+# Function to send an email to a recipient
+def sendEmail(recipient, name, content):
+
+  # Create email content
+  message = email.message.Message()
+  message['Subject'] = 'Your daily COVID-19 report'
+  message['From'] = config['address']
+  message['To'] = recipient
+  message.add_header('Content-Type', 'text/html')
+  message.set_payload(content)
+
+  # Start server and log in to sender email
+  server = smtplib.SMTP('smtp.gmail.com: 587')
+  server.starttls()
+  server.login(message['From'], config['password'])
+
+  # Send email and quit server
+  server.sendmail(message['From'], message['To'], message.as_string())
+  server.quit()
+
 # Fill states dict with data from file
 with open('locations/us-states.json') as stateFile: states = json.load(stateFile)
 
-# Dict to store all U.S. counties
-allCounties = {}
 # Fill counties dict with data from file
 with open('locations/us-counties.json') as countyFile: allCounties = json.load(countyFile)
 
-# Get and store country data
+# Dicts to store scraped data
 countryData = {}
-# getCountryData(countryData)
-
-# Get and store county data
 countyData = {}
-# getStateData(countyData, states)
-# getCountyData(countyData, states, allCounties)
 
-# Write data to JSON files
-# with open('data/country-data.json', 'w') as out: out.write(json.dumps(countryData, indent=2))
-# with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
+# Scrape and store all data
+scrape(countyData, countryData, states, allCounties)
 
-# Dict to store email config data
-config = {}
 # Fill config with data from file
 with open('config.json') as configFile: config = json.load(configFile)
 
-# Create email content
-message = email.message.Message()
-message['Subject'] = 'test'
-message['From'] = config['address']
-message['To'] = config['address']
-message.add_header('Content-Type', 'text/html')
-message.set_payload('<h1>Hello</h1>')
-
-# Start server and log in to sender email
-# server = smtplib.SMTP('smtp.gmail.com: 587')
-# server.starttls()
-# server.login(message['From'], config['password'])
-
-# Send email and quit server
-# server.sendmail(message['From'], message['To'], message.as_string())
-# server.quit()
-
-db = mysql.connector.connect(
-  host = config['db']['host'],
-  user = config['db']['user'],
-  password = config['db']['password'],
-  database = config['db']['database']
-)
+# db = mysql.connector.connect(
+#   host = config['db']['host'],
+#   user = config['db']['user'],
+#   password = config['db']['password'],
+#   database = config['db']['database']
+# )
