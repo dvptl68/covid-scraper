@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import json
 import smtplib
 import email.message
+import mysql.connector
 
 # Returns a bs4 object with the parsed HTML from the given URL
 def getData(url): return BeautifulSoup(requests.get(url).content, 'html.parser')
@@ -124,10 +125,16 @@ message.add_header('Content-Type', 'text/html')
 message.set_payload('<h1>Hello</h1>')
 
 # Start server and log in to sender email
-server = smtplib.SMTP('smtp.gmail.com: 587')
-server.starttls()
-server.login(message['From'], config['password'])
+# server = smtplib.SMTP('smtp.gmail.com: 587')
+# server.starttls()
+# server.login(message['From'], config['password'])
 
 # Send email and quit server
-server.sendmail(message['From'], message['To'], message.as_string())
-server.quit()
+# server.sendmail(message['From'], message['To'], message.as_string())
+# server.quit()
+
+db = mysql.connector.connect(
+  host = config[''],
+  user = config[''],
+  password = config['']
+)
