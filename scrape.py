@@ -101,6 +101,52 @@ def scrape(countyData, countryData, states, allCounties):
   with open('data/country-data.json', 'w') as out: out.write(json.dumps(countryData, indent=2))
   with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
 
+# Function to read emails and process registrations
+def processEmail(userData):
+
+  # Log in to email account and select inbox
+  imap = imaplib.IMAP4_SSL("imap.gmail.com")
+  imap.login(config['address'], config['password'])
+  status, messages = imap.select("INBOX")
+  messages = int(messages[0])
+
+  # Iterate through all emails in inbox
+  for i in range(messages, 0, -1):
+
+    # Get message ID
+    res, msg = imap.fetch(str(i), "(RFC822)")
+
+    for response in msg:
+
+      if isinstance(response, tuple):
+
+        msg = email.message_from_bytes(response[1])
+
+        # Decode email subject
+        subject = email.header.decode_header(msg["Subject"])[0][0]
+
+        # Decode subject if it is byte code
+        if isinstance(subject, bytes): subject = subject.decode()
+
+        # Skip rest of loop if email is not from correct sender and not about new user registration
+        if msg.get('From') != config['name'] + ' <' + config['address'] + '>' or subject != 'new user registration': continue
+
+        # Iterate through email parts
+        for part in msg.walk():
+
+          # Get content type of email
+          content_type = part.get_content_type()
+
+          # Get email body
+          try: body = part.get_payload(decode=True).decode()
+          except: pass
+
+          # Add data if content type is plain text
+          if content_type == "text/plain": userData.append(json.loads(body.strip()))
+
+  imap.close()
+  imap.logout()
+
 # Function to send an email to a recipient
 def sendEmail(recipient, name, content):
 
@@ -150,46 +196,8 @@ countyData = {}
 # Fill config with data from file
 with open('config.json') as configFile: config = json.load(configFile)
 
-# Login to email account and select inbox
-imap = imaplib.IMAP4_SSL("imap.gmail.com")
-imap.login(config['address'], config['password'])
-status, messages = imap.select("INBOX")
-N = 10
-messages = int(messages[0])
+# List to store user data
+userData = []
 
-# Iterate through all emails in inbox
-for i in range(messages, messages-N, -1):
-
-  # Get message ID
-  res, msg = imap.fetch(str(i), "(RFC822)")
-
-  for response in msg:
-
-    if isinstance(response, tuple):
-
-      msg = email.message_from_bytes(response[1])
-
-      # Decode email subject
-      subject = email.header.decode_header(msg["Subject"])[0][0]
-
-      # Decode subject if it is byte code
-      if isinstance(subject, bytes): subject = subject.decode()
-
-      # Skip rest of loop if email is not from correct sender and not about new user registration
-      if msg.get('From') != config['name'] + ' <' + config['address'] + '>' or subject != 'new user registration': continue
-
-      # Iterate through email parts
-      for part in msg.walk():
-
-        # Get content type of email
-        content_type = part.get_content_type()
-
-        # Get email body
-        try: body = part.get_payload(decode=True).decode()
-        except: pass
-
-        # Print if content type is plain text
-        if content_type == "text/plain": print(body.strip())
-
-imap.close()
-imap.logout()
+# Get user data from email inbox
+processEmail(userData)
