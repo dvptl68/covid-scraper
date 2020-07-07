@@ -144,6 +144,11 @@ def processEmail(userData):
           # Add data if content type is plain text
           if content_type == "text/plain": userData.append(json.loads(body.strip()))
 
+        # Send registration email to archive
+        imap.store(str(i), '+FLAGS', '\\Deleted')
+
+  # Close imap connection
+  imap.expunge()
   imap.close()
   imap.logout()
 
@@ -201,3 +206,5 @@ userData = []
 
 # Get user data from email inbox
 processEmail(userData)
+
+print(userData)
