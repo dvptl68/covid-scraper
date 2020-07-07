@@ -134,7 +134,8 @@ message.set_payload('<h1>Hello</h1>')
 # server.quit()
 
 db = mysql.connector.connect(
-  host = config[''],
-  user = config[''],
-  password = config['']
+  host = config['db']['host'],
+  user = config['db']['user'],
+  password = config['db']['password'],
+  database = config['db']['database']
 )
