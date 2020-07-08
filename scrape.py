@@ -184,16 +184,27 @@ def connectDB(userData, config):
 
   # Commit changes to database
   db.commit()
-  
+
+  # Clear userData list
+  userData *= 0
+
   # Get all users from database
   cursor.execute('SELECT * FROM ' + config['db']['tableName'])
   result = cursor.fetchall()
-  for x in result:
-    print(x)
+  for user in result:
+    userData.append({
+      "email": user[1],
+      "name": user[2],
+      "country": user[3],
+      "state": user[4],
+      "county": user[5]
+    })
 
   # CLose connections
   cursor.close()
   db.close()
+
+# sql command to create the table: CREATE TABLE *name* (id INT AUTO_INCREMENT PRIMARY KEY, email TEXT NOT NULL, name TEXT NOT NULL, country TEXT NOT NULL, state TEXT, county TEXT);
 
 # Function to send an email to a recipient
 def sendEmail(recipient, name, content, config):
@@ -228,7 +239,7 @@ countryData = {}
 countyData = {}
 
 # Scrape and store all data
-scrape(countyData, countryData, states, allCounties)
+# scrape(countyData, countryData, states, allCounties)
 
 # Fill config with data from file
 with open('config.json') as configFile: config = json.load(configFile)
