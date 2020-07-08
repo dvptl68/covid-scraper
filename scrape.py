@@ -93,11 +93,17 @@ def getCountyData(countyData, states, allCounties):
 def scrape(countyData, countryData, states, allCounties):
 
   # Scrape all data
+  print('Retrieving country data...')
   getCountryData(countryData)
+
+  print('Retrieving state data...')
   getStateData(countyData, states)
+
+  print('Retrieving county data...')
   getCountyData(countyData, states, allCounties)
 
   # Write data to JSON files
+  print('Writing data to files...')
   with open('data/country-data.json', 'w') as out: out.write(json.dumps(countryData, indent=2))
   with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
 
@@ -105,12 +111,14 @@ def scrape(countyData, countryData, states, allCounties):
 def processEmail(userData, config):
 
   # Log in to email account and select inbox
+  print('Logging into email to read...')
   imap = imaplib.IMAP4_SSL("imap.gmail.com")
   imap.login(config['address'], config['password'])
   status, messages = imap.select("INBOX")
   messages = int(messages[0])
 
   # Iterate through all emails in inbox
+  print('Reading all emails...')
   for i in range(messages, 0, -1):
 
     # Get message ID
@@ -176,6 +184,7 @@ def sendEmail(recipient, name, content, config):
 def connectDB(userData, config):
 
   # Establish connection
+  print('Connecting to database...')
   db = mysql.connector.connect(
     host = config['db']['host'],
     user = config['db']['user'],
@@ -187,13 +196,16 @@ def connectDB(userData, config):
   cursor = db.cursor()
 
   # Insert user data into database for each user
+  print('Writing new data to database...')
   for user in userData:
     command = 'INSERT INTO ' + config['db']['tableName'] + ' (email, name, country, state, county) VALUES (%s, %s, %s, %s, %s)'
     values = (user['email'], user['name'], user['country'], user['state'], user['county'])
     cursor.execute(command, values)
 
+  # Commit changes to database
   db.commit()
 
+print('Retrieving required information...')
 
 # Fill states dict with data from file
 with open('locations/us-states.json') as stateFile: states = json.load(stateFile)
@@ -216,8 +228,6 @@ userData = []
 
 # Get user data from email inbox
 # processEmail(userData, config)
-
-print(userData)
 
 # Add user registrations to database
 connectDB(userData, config)
