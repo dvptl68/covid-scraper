@@ -102,7 +102,7 @@ def scrape(countyData, countryData, states, allCounties):
   with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
 
 # Function to read emails and process registrations
-def processEmail(userData):
+def processEmail(userData, config):
 
   # Log in to email account and select inbox
   imap = imaplib.IMAP4_SSL("imap.gmail.com")
@@ -153,7 +153,7 @@ def processEmail(userData):
   imap.logout()
 
 # Function to send an email to a recipient
-def sendEmail(recipient, name, content):
+def sendEmail(recipient, name, content, config):
 
   # Create email content
   message = email.message.Message()
@@ -173,7 +173,7 @@ def sendEmail(recipient, name, content):
   server.quit()
 
 # Function to connect to database
-def connectDB():
+def connectDB(userData, config):
 
   # Establish connection
   db = mysql.connector.connect(
@@ -183,7 +183,17 @@ def connectDB():
     database = config['db']['database']
   )
 
-  print(db)
+  # Set database cursor
+  cursor = db.cursor()
+
+  # Insert user data into database for each user
+  for user in userData:
+    command = 'INSERT INTO ' + config['db']['tableName'] + ' (email, name, country, state, county) VALUES (%s, %s, %s, %s, %s)'
+    values = (user['email'], user['name'], user['country'], user['state'], user['county'])
+    cursor.execute(command, values)
+
+  db.commit()
+
 
 # Fill states dict with data from file
 with open('locations/us-states.json') as stateFile: states = json.load(stateFile)
@@ -205,6 +215,9 @@ with open('config.json') as configFile: config = json.load(configFile)
 userData = []
 
 # Get user data from email inbox
-processEmail(userData)
+# processEmail(userData, config)
 
 print(userData)
+
+# Add user registrations to database
+connectDB(userData, config)
