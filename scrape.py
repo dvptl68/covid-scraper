@@ -160,26 +160,6 @@ def processEmail(userData, config):
   imap.close()
   imap.logout()
 
-# Function to send an email to a recipient
-def sendEmail(recipient, name, content, config):
-
-  # Create email content
-  message = email.message.Message()
-  message['Subject'] = 'Your daily COVID-19 report'
-  message['From'] = config['address']
-  message['To'] = recipient
-  message.add_header('Content-Type', 'text/html')
-  message.set_payload(content)
-
-  # Start server and log in to sender email
-  server = smtplib.SMTP('smtp.gmail.com: 587')
-  server.starttls()
-  server.login(message['From'], config['password'])
-
-  # Send email and quit server
-  server.sendmail(message['From'], message['To'], message.as_string())
-  server.quit()
-
 # Function to connect to database
 def connectDB(userData, config):
 
@@ -204,6 +184,36 @@ def connectDB(userData, config):
 
   # Commit changes to database
   db.commit()
+  
+  # Get all users from database
+  cursor.execute('SELECT * FROM ' + config['db']['tableName'])
+  result = cursor.fetchall()
+  for x in result:
+    print(x)
+
+  # CLose connections
+  cursor.close()
+  db.close()
+
+# Function to send an email to a recipient
+def sendEmail(recipient, name, content, config):
+
+  # Create email content
+  message = email.message.Message()
+  message['Subject'] = 'Your daily COVID-19 report'
+  message['From'] = config['address']
+  message['To'] = recipient
+  message.add_header('Content-Type', 'text/html')
+  message.set_payload(content)
+
+  # Start server and log in to sender email
+  server = smtplib.SMTP('smtp.gmail.com: 587')
+  server.starttls()
+  server.login(message['From'], config['password'])
+
+  # Send email and quit server
+  server.sendmail(message['From'], message['To'], message.as_string())
+  server.quit()
 
 print('Retrieving required information...')
 
@@ -230,6 +240,6 @@ userData = []
 # processEmail(userData, config)
 
 # Add user registrations to database
-# connectDB(userData, config)
+connectDB(userData, config)
 
-print('Done!')
+print('Done!') 
