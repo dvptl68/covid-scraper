@@ -213,31 +213,39 @@ def connectDB(userData, config):
 # Function ot create email content specific to each user
 def createEmail(content, name, country, state, county, countryData, countyData):
 
-  # Add HTML opening tags
-  newContent = '<!DOCTYPE html><html><head></head><body>'
-
   # Add title text
-  newContent += '<div style=\'position: absolute; width: 100%; top: 0; left: 0;\'>'
+  newContent += '<div style=\'display: inline;\'>'
   newContent += f'<h1 style=\'text-align: center;\'>Hello, {name}. Your daily COVID-19 report is here.</h1></div>'
 
   # Add worldwide data
   newContent += content.replace('#LOCATION#', 'Worldwide').replace('#CASES#', countryData['Total'][0]).replace('#DEATHS#', countryData['Total'][1]).replace('#RECOVERIES#', countryData['Total'][2])
 
   # Add country data
-  newContent += content.replace('#LOCATION#', 'Worldwide').replace('#CASES#', countryData[country][0]).replace('#DEATHS#', countryData[country][1]).replace('#RECOVERIES#', countryData[country][2])
+  newContent += content.replace('#LOCATION#', country).replace('#CASES#', countryData[country][0]).replace('#DEATHS#', countryData[country][1]).replace('#RECOVERIES#', countryData[country][2])
 
-  # Add closing tags and return new content if state is not selected
-  if state == '': return newContent + '</body></html>'
+  # Return new content if state is not selected
+  if state == '': return newContent
 
+  # Add state data
+  newContent += content.replace('#LOCATION#', state).replace('#CASES#', countyData[state]['Total'][0]).replace('#DEATHS#', countyData[state]['Total'][1]).replace('#RECOVERIES#', countyData[state]['Total'][2])
 
-  # Add closing tags and return new content if county is not selected
-  if county == '': return newContent + '</body></html>'
+  # Return new content if county is not selected
+  if county == '': return newContent
 
-  # Return new content with closing tags
-  return newContent + '</body></html>'
+  # Set correct county extension
+  extension = 'county'
+  if state == 'Alaska': extension = 'borough'
+  elif state == 'Louisiana': extension = 'parish'
+  elif state == 'Rhode Island': extension = 'municipality'
+
+  # Add county data
+  newContent += content.replace('#LOCATION#', county + ' (' + extension + '), ' + state).replace('#CASES#', countyData[state][county][0]).replace('#DEATHS#', countyData[state][county][1]).replace('#RECOVERIES#', countyData[state][county][2])
+
+  # Return new content
+  return newContent
 
 # Function to send an email to a recipient
-def sendEmail(recipient, content, config):
+def sendEmail(recipient, content, config, totalSent, totalFailed):
 
   # Create email content
   message = email.message.Message()
@@ -253,8 +261,12 @@ def sendEmail(recipient, content, config):
   server.login(message['From'], config['password'])
 
   # Attempt to send email
-  try: server.sendmail(message['From'], message['To'], message.as_string())
-  except: print('Unable to send email to ' + recipient)
+  try:
+    server.sendmail(message['From'], message['To'], message.as_string())
+    totalSent += 1
+  except:
+    print('Unable to send email to ' + recipient)
+    totalFailed += 1
 
   # Quit server
   server.quit()
@@ -274,7 +286,7 @@ countryData = {}
 countyData = {}
 
 # Scrape and store all data
-scrape(countyData, countryData, states, allCounties)
+# scrape(countyData, countryData, states, allCounties)
 
 # Fill config with data from file
 with open('config.json') as configFile: config = json.load(configFile)
@@ -293,6 +305,6 @@ with open('email.html') as emailHTML: content = emailHTML.read()
 
 # Send emails to users
 print('Sending all emails...')
+totalSent, totalFailed = 0, 0
 for user in userData: sendEmail(user['email'], createEmail(content, user['name'], user['country'], user['state'], user['county'], countryData, countyData), config)
-
-print('Done!')
+print(f'{totalSent} emails sent, {totalFailed} emails failed to send.')
