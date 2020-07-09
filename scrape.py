@@ -180,7 +180,7 @@ def connectDB(userData, config):
   # Insert user data into database for each user
   print('Writing new data to database...')
   for user in userData:
-    command = 'INSERT INTO ' + config['db']['tableName'] + ' (email, name, country, state, county) VALUES (%s, %s, %s, %s, %s)'
+    command = 'INSERT INTO userData (email, name, country, state, county) VALUES (%s, %s, %s, %s, %s)'
     values = (user['email'], user['name'], user['country'], user['state'], user['county'])
     cursor.execute(command, values)
 
@@ -192,7 +192,7 @@ def connectDB(userData, config):
 
   # Get all users from database
   print('Retrieving all users from database...')
-  cursor.execute('SELECT * FROM ' + config['db']['tableName'])
+  cursor.execute('SELECT * FROM userData')
   result = cursor.fetchall()
   for user in result:
     userData.append({
@@ -208,13 +208,13 @@ def connectDB(userData, config):
   db.close()
 
 # CREATE TABLE userData (id INT AUTO_INCREMENT PRIMARY KEY, email TEXT NOT NULL, name TEXT NOT NULL, country TEXT NOT NULL, state TEXT, county TEXT);
-# INSERT INTO userData (email, name, country, state, county) VALUES ('inferno686868@gmail.com', 'nick', 'sda', 'sdaw', 'sdaw');
+# INSERT INTO userData (email, name, country, state, county) VALUES ('example@email.com', '', '', '', '');
 
 # Function ot create email content specific to each user
 def createEmail(content, name, country, state, county, countryData, countyData):
 
   # Add title text
-  newContent += '<div style=\'display: inline;\'>'
+  newContent = '<div style=\'display: inline;\'>'
   newContent += f'<h1 style=\'text-align: center;\'>Hello, {name}. Your daily COVID-19 report is here.</h1></div>'
 
   # Add worldwide data
@@ -286,7 +286,7 @@ countryData = {}
 countyData = {}
 
 # Scrape and store all data
-# scrape(countyData, countryData, states, allCounties)
+scrape(countyData, countryData, states, allCounties)
 
 # Fill config with data from file
 with open('config.json') as configFile: config = json.load(configFile)
@@ -295,10 +295,10 @@ with open('config.json') as configFile: config = json.load(configFile)
 userData = []
 
 # Get user data from email inbox
-# processEmail(userData, config)
+processEmail(userData, config)
 
 # Add user registrations to database
-# connectDB(userData, config)
+connectDB(userData, config)
 
 # Get email HTML content
 with open('email.html') as emailHTML: content = emailHTML.read()
@@ -306,5 +306,5 @@ with open('email.html') as emailHTML: content = emailHTML.read()
 # Send emails to users
 print('Sending all emails...')
 totalSent, totalFailed = 0, 0
-for user in userData: sendEmail(user['email'], createEmail(content, user['name'], user['country'], user['state'], user['county'], countryData, countyData), config)
+for user in userData: sendEmail(user['email'], createEmail(content, user['name'], user['country'], user['state'], user['county'], countryData, countyData), config, totalSent, totalFailed)
 print(f'{totalSent} emails sent, {totalFailed} emails failed to send.')
