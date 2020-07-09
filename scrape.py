@@ -112,9 +112,9 @@ def processEmail(userData, config):
 
   # Log in to email account and select inbox
   print('Logging into email to read...')
-  imap = imaplib.IMAP4_SSL("imap.gmail.com")
+  imap = imaplib.IMAP4_SSL('imap.gmail.com')
   imap.login(config['address'], config['password'])
-  status, messages = imap.select("INBOX")
+  status, messages = imap.select('INBOX')
   messages = int(messages[0])
 
   # Iterate through all emails in inbox
@@ -122,7 +122,7 @@ def processEmail(userData, config):
   for i in range(messages, 0, -1):
 
     # Get message ID
-    res, msg = imap.fetch(str(i), "(RFC822)")
+    res, msg = imap.fetch(str(i), '(RFC822)')
 
     for response in msg:
 
@@ -131,7 +131,7 @@ def processEmail(userData, config):
         msg = email.message_from_bytes(response[1])
 
         # Decode email subject
-        subject = email.header.decode_header(msg["Subject"])[0][0]
+        subject = email.header.decode_header(msg['Subject'])[0][0]
 
         # Decode subject if it is byte code
         if isinstance(subject, bytes): subject = subject.decode()
@@ -150,7 +150,7 @@ def processEmail(userData, config):
           except: pass
 
           # Add data if content type is plain text
-          if content_type == "text/plain": userData.append(json.loads(body.strip()))
+          if content_type == 'text/plain': userData.append(json.loads(body.strip()))
 
         # Send registration email to archive
         imap.store(str(i), '+FLAGS', '\\Deleted')
@@ -189,25 +189,27 @@ def connectDB(userData, config):
   userData *= 0
 
   # Get all users from database
+  print('Retrieving all users from database...')
   cursor.execute('SELECT * FROM ' + config['db']['tableName'])
   result = cursor.fetchall()
   for user in result:
     userData.append({
-      "email": user[1],
-      "name": user[2],
-      "country": user[3],
-      "state": user[4],
-      "county": user[5]
+      'email': user[1],
+      'name': user[2],
+      'country': user[3],
+      'state': user[4],
+      'county': user[5]
     })
 
   # CLose connections
   cursor.close()
   db.close()
 
-# sql command to create the table: CREATE TABLE *name* (id INT AUTO_INCREMENT PRIMARY KEY, email TEXT NOT NULL, name TEXT NOT NULL, country TEXT NOT NULL, state TEXT, county TEXT);
+# CREATE TABLE userData (id INT AUTO_INCREMENT PRIMARY KEY, email TEXT NOT NULL, name TEXT NOT NULL, country TEXT NOT NULL, state TEXT, county TEXT);
+# INSERT INTO userData (email, name, country, state, county) VALUES ('inferno686868@gmail.com', 'nick', 'sda', 'sdaw', 'sdaw');
 
 # Function to send an email to a recipient
-def sendEmail(recipient, name, content, config):
+def sendEmail(recipient, content, config):
 
   # Create email content
   message = email.message.Message()
@@ -222,8 +224,11 @@ def sendEmail(recipient, name, content, config):
   server.starttls()
   server.login(message['From'], config['password'])
 
-  # Send email and quit server
-  server.sendmail(message['From'], message['To'], message.as_string())
+  # Attempt to send email
+  try: server.sendmail(message['From'], message['To'], message.as_string())
+  except: print('Unable to send email to ' + recipient)
+
+  # Quit server
   server.quit()
 
 print('Retrieving required information...')
@@ -239,7 +244,7 @@ countryData = {}
 countyData = {}
 
 # Scrape and store all data
-scrape(countyData, countryData, states, allCounties)
+# scrape(countyData, countryData, states, allCounties)
 
 # Fill config with data from file
 with open('config.json') as configFile: config = json.load(configFile)
@@ -248,9 +253,14 @@ with open('config.json') as configFile: config = json.load(configFile)
 userData = []
 
 # Get user data from email inbox
-# processEmail(userData, config)
+processEmail(userData, config)
 
 # Add user registrations to database
-# connectDB(userData, config)
+connectDB(userData, config)
 
-print('Done!') 
+# Send emails to users
+print('Sending all emails...')
+for user in userData:
+  sendEmail(user['email'], '<h1>name: ' + user['name'] + '</h1>', config)
+
+print('Done!')
