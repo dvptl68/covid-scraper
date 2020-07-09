@@ -239,7 +239,7 @@ countryData = {}
 countyData = {}
 
 # Scrape and store all data
-# scrape(countyData, countryData, states, allCounties)
+scrape(countyData, countryData, states, allCounties)
 
 # Fill config with data from file
 with open('config.json') as configFile: config = json.load(configFile)
@@ -251,6 +251,6 @@ userData = []
 # processEmail(userData, config)
 
 # Add user registrations to database
-connectDB(userData, config)
+# connectDB(userData, config)
 
 print('Done!') 
