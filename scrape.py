@@ -211,7 +211,7 @@ def connectDB(userData, config):
 # INSERT INTO userData (email, name, country, state, county) VALUES ('inferno686868@gmail.com', 'nick', 'sda', 'sdaw', 'sdaw');
 
 # Function ot create email content specific to each user
-def createEmail(content, name, country, state, county):
+def createEmail(content, name, country, state, county, countryData, countyData):
 
   # Add HTML opening tags
   newContent = '<!DOCTYPE html><html><head></head><body>'
@@ -220,7 +220,21 @@ def createEmail(content, name, country, state, county):
   newContent += '<div style=\'position: absolute; width: 100%; top: 0; left: 0;\'>'
   newContent += f'<h1 style=\'text-align: center;\'>Hello, {name}. Your daily COVID-19 report is here.</h1></div>'
 
-  return newContent
+  # Add worldwide data
+  newContent += content.replace('#LOCATION#', 'Worldwide').replace('#CASES#', countryData['Total'][0]).replace('#DEATHS#', countryData['Total'][1]).replace('#RECOVERIES#', countryData['Total'][2])
+
+  # Add country data
+  newContent += content.replace('#LOCATION#', 'Worldwide').replace('#CASES#', countryData[country][0]).replace('#DEATHS#', countryData[country][1]).replace('#RECOVERIES#', countryData[country][2])
+
+  # Add closing tags and return new content if state is not selected
+  if state == '': return newContent + '</body></html>'
+
+
+  # Add closing tags and return new content if county is not selected
+  if county == '': return newContent + '</body></html>'
+
+  # Return new content with closing tags
+  return newContent + '</body></html>'
 
 # Function to send an email to a recipient
 def sendEmail(recipient, content, config):
@@ -260,7 +274,7 @@ countryData = {}
 countyData = {}
 
 # Scrape and store all data
-# scrape(countyData, countryData, states, allCounties)
+scrape(countyData, countryData, states, allCounties)
 
 # Fill config with data from file
 with open('config.json') as configFile: config = json.load(configFile)
@@ -279,6 +293,6 @@ with open('email.html') as emailHTML: content = emailHTML.read()
 
 # Send emails to users
 print('Sending all emails...')
-for user in userData: sendEmail(user['email'], createEmail(content, user['name'], user['country'], user['state'], user['county']), config)
+for user in userData: sendEmail(user['email'], createEmail(content, user['name'], user['country'], user['state'], user['county'], countryData, countyData), config)
 
 print('Done!')
