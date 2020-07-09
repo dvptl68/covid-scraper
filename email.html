@@ -6,7 +6,16 @@
 
 <body>
 
-  <h1>Hello, #NAME#. Your daily COVID-19 report is here.</h1>
+  <div style='position: absolute; width: 100%; top: 0; left: 0;'>
+    <h1 style='text-align: center;'>Hello, #NAME#. Your daily COVID-19 report is here.</h1>
+  </div>
+
+  <div style='position: absolute; width: 100%; top: 100px;'>
+    <h2 style='text-align: center;'>#LOCATION#</h2>
+    <p style='text-align: center; font-size: larger;'>Cases: #CASES#</p>
+    <p style='text-align: center; font-size: larger;'>Recoveries: #RECOVERIES#</p>
+    <p style='text-align: center; font-size: larger;'>Deaths: #DEATHS#</p>
+  </div>
 
 </body>
 

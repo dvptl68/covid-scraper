@@ -210,6 +210,18 @@ def connectDB(userData, config):
 # CREATE TABLE userData (id INT AUTO_INCREMENT PRIMARY KEY, email TEXT NOT NULL, name TEXT NOT NULL, country TEXT NOT NULL, state TEXT, county TEXT);
 # INSERT INTO userData (email, name, country, state, county) VALUES ('inferno686868@gmail.com', 'nick', 'sda', 'sdaw', 'sdaw');
 
+# Function ot create email content specific to each user
+def createEmail(content, name, country, state, county):
+
+  # Add HTML opening tags
+  newContent = '<!DOCTYPE html><html><head></head><body>'
+
+  # Add title text
+  newContent += '<div style=\'position: absolute; width: 100%; top: 0; left: 0;\'>'
+  newContent += f'<h1 style=\'text-align: center;\'>Hello, {name}. Your daily COVID-19 report is here.</h1></div>'
+
+  return newContent
+
 # Function to send an email to a recipient
 def sendEmail(recipient, content, config):
 
@@ -267,7 +279,6 @@ with open('email.html') as emailHTML: content = emailHTML.read()
 
 # Send emails to users
 print('Sending all emails...')
-for user in userData:
-  sendEmail(user['email'], '<h1>name: ' + user['name'] + '</h1>', config)
+for user in userData: sendEmail(user['email'], createEmail(content, user['name'], user['country'], user['state'], user['county']), config)
 
 print('Done!')
