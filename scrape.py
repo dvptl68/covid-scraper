@@ -6,6 +6,8 @@ import imaplib
 import email.message
 import mysql.connector
 
+# ALL FUNCTIONS
+
 # Returns a bs4 object with the parsed HTML from the given URL
 def getData(url): return BeautifulSoup(requests.get(url).content, 'html.parser')
 
@@ -231,6 +233,8 @@ def sendEmail(recipient, content, config):
   # Quit server
   server.quit()
 
+# PROGRAM STARTS
+
 print('Retrieving required information...')
 
 # Fill states dict with data from file
@@ -253,10 +257,13 @@ with open('config.json') as configFile: config = json.load(configFile)
 userData = []
 
 # Get user data from email inbox
-processEmail(userData, config)
+# processEmail(userData, config)
 
 # Add user registrations to database
-connectDB(userData, config)
+# connectDB(userData, config)
+
+# Get email HTML content
+with open('email.html') as emailHTML: content = emailHTML.read()
 
 # Send emails to users
 print('Sending all emails...')
