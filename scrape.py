@@ -112,6 +112,9 @@ def scrape(countyData, countryData, states, allCounties):
 # Function to read emails and process registrations
 def processEmail(userData, config):
 
+  # List of users to remove from database
+  removeUser = []
+
   # Log in to email account and select inbox
   print('Logging into email to read...')
   imap = imaplib.IMAP4_SSL('imap.gmail.com')
@@ -139,7 +142,7 @@ def processEmail(userData, config):
         if isinstance(subject, bytes): subject = subject.decode()
 
         # Skip rest of loop if email is not from correct sender and not about new user registration
-        if msg.get('From') != config['name'] + ' <' + config['address'] + '>' or subject != 'new user registration': continue
+        if msg.get('From') != config['name'] + ' <' + config['address'] + '>' or (subject != 'new user registration' and subject != 'remove user'): continue
 
         # Iterate through email parts
         for part in msg.walk():
@@ -151,8 +154,14 @@ def processEmail(userData, config):
           try: body = part.get_payload(decode=True).decode()
           except: pass
 
-          # Add data if content type is plain text
-          if content_type == 'text/plain': userData.append(json.loads(body.strip()))
+          # Skip rest of loop if content type is not plain text
+          if content_type == 'text/plain': continue
+
+          # Add user to corresponding list
+          if subject == 'new user registration':
+            userData.append(json.loads(body.strip()))
+          elif subject == 'remove user':
+            removeUser.append(json.loads(body.strip()))
 
         # Send registration email to archive
         imap.store(str(i), '+FLAGS', '\\Deleted')
@@ -271,7 +280,7 @@ def sendEmail(recipient, content, config, outcome):
   # Quit server
   server.quit()
 
-# PROGRAM STARTS
+# PROGRAM STARTS HERE
 
 print('Retrieving required information...')
 
