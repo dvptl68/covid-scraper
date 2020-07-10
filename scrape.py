@@ -171,8 +171,10 @@ def processEmail(userData, config):
   imap.close()
   imap.logout()
 
+  return removeUser
+
 # Function to connect to database
-def connectDB(userData, config):
+def connectDB(userData, removeUser, config):
 
   # Establish connection
   print('Connecting to database...')
@@ -185,6 +187,10 @@ def connectDB(userData, config):
 
   # Set database cursor
   cursor = db.cursor()
+
+  # Remove users who unsubscribed
+  print('Removing old data...')
+  for user in removeUser: cursor.execute('DELETE FROM userData WHERE email={} AND name={} AND country={} AND state={} AND county={}'.format(user['email'], user['name'], user['country'], user['state'], user['county']))
 
   # Insert user data into database for each user
   print('Writing new data to database...')
@@ -304,10 +310,10 @@ with open('config.json') as configFile: config = json.load(configFile)
 userData = []
 
 # Get user data from email inbox
-# processEmail(userData, config)
+# removeUser = processEmail(userData, config)
 
 # Add user registrations to database
-# connectDB(userData, config)
+# connectDB(userData, removeUser, config)
 
 # Get email HTML content
 with open('email.html') as emailHTML: content = emailHTML.read()
