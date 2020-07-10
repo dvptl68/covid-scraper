@@ -39,7 +39,7 @@ def getStateData(countyData, states):
     stateName = element.findAll('th')[1].getText(strip=True)
 
     if stateName in states.keys():
-      countyData[stateName] = {'Total': list(map(lambda x: x.getText(strip=True), element.findAll('td')[:3]))[:3]}
+      countyData[stateName] = {'Total': list(map(lambda x: x.getText(strip=True).replace('\u2013', 'No data').replace('\u2014', 'No data'), element.findAll('td')[:3]))[:3]}
 
 # Function to scrape Wikipedia page for county data
 def getCountyData(countyData, states, allCounties):
@@ -86,7 +86,7 @@ def getCountyData(countyData, states, allCounties):
       indices = states[state]
       countyNumbers = []
       # print(countyName + ', ' + state)
-      for i in indices: countyNumbers.append(element.findAll('td')[i].getText(strip=True) if i > -1 else '-')
+      for i in indices: countyNumbers.append(element.findAll('td')[i].getText(strip=True).replace('\u2013', 'No data').replace('\u2014', 'No data') if i > -1 else 'No data')
 
       # Add county name and data to dict
       countyData[state].update({countyName: countyNumbers})
@@ -245,7 +245,7 @@ def createEmail(content, name, country, state, county, countryData, countyData):
   return newContent
 
 # Function to send an email to a recipient
-def sendEmail(recipient, content, config, totalSent, totalFailed):
+def sendEmail(recipient, content, config, outcome):
 
   # Create email content
   message = email.message.Message()
@@ -263,10 +263,10 @@ def sendEmail(recipient, content, config, totalSent, totalFailed):
   # Attempt to send email
   try:
     server.sendmail(message['From'], message['To'], message.as_string())
-    totalSent += 1
-  except:
-    print('Unable to send email to ' + recipient)
-    totalFailed += 1
+    outcome[0] += 1
+  except Exception as e:
+    print('Unable to send email to ' + recipient + '. Error: ' + str(e))
+    outcome[1] += 1
 
   # Quit server
   server.quit()
@@ -295,16 +295,16 @@ with open('config.json') as configFile: config = json.load(configFile)
 userData = []
 
 # Get user data from email inbox
-processEmail(userData, config)
+# processEmail(userData, config)
 
 # Add user registrations to database
-connectDB(userData, config)
+# connectDB(userData, config)
 
 # Get email HTML content
 with open('email.html') as emailHTML: content = emailHTML.read()
 
 # Send emails to users
 print('Sending all emails...')
-totalSent, totalFailed = 0, 0
-for user in userData: sendEmail(user['email'], createEmail(content, user['name'], user['country'], user['state'], user['county'], countryData, countyData), config, totalSent, totalFailed)
-print(f'{totalSent} emails sent, {totalFailed} emails failed to send.')
+outcome = [0, 0]
+# for user in userData: sendEmail(user['email'], createEmail(content, user['name'], user['country'], user['state'], user['county'], countryData, countyData), config, outcome)
+print(f'{outcome[0]} email(s) sent, {outcome[1]} email(s) failed to send.')
