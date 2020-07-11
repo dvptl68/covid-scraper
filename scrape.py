@@ -226,11 +226,10 @@ def connectDB(userData, removeUser, config):
 # INSERT INTO userData (email, name, country, state, county) VALUES ('example@email.com', '', '', '', '');
 
 # Function ot create email content specific to each user
-def createEmail(content, name, country, state, county, countryData, countyData):
+def createEmail(content, email, name, country, state, county, countryData, countyData):
 
   # Add title text
-  newContent = '<div style=\'display: inline;\'>'
-  newContent += f'<h1 style=\'text-align: center;\'>Hello, {name}. Your daily COVID-19 report is here.</h1></div>'
+  newContent = f'<div style=\'display: inline;\'><h1 style=\'text-align: center;\'>Hello, {name}. Your daily COVID-19 report is here.</h1></div>'
 
   # Add worldwide data
   newContent += content.replace('#LOCATION#', 'Worldwide').replace('#CASES#', countryData['Total'][0]).replace('#DEATHS#', countryData['Total'][1]).replace('#RECOVERIES#', countryData['Total'][2])
@@ -255,6 +254,9 @@ def createEmail(content, name, country, state, county, countryData, countyData):
 
   # Add county data
   newContent += content.replace('#LOCATION#', county + ' (' + extension + '), ' + state).replace('#CASES#', countyData[state][county][0]).replace('#DEATHS#', countyData[state][county][1]).replace('#RECOVERIES#', countyData[state][county][2])
+
+  # Add unsubscribe link
+  newContent += f'<div style=\'display: inline;\'><a href=\'covid19reports.epizy.com/php/unsubscribe.php?email={email}&name={name}&country={country}&state={state}&county={county}\' style=\'text-align: center;\'>Unsubscrbe</a></div>'
 
   # Return new content
   return newContent
@@ -321,5 +323,5 @@ with open('email.html') as emailHTML: content = emailHTML.read()
 # Send emails to users
 print('Sending all emails...')
 outcome = [0, 0]
-# for user in userData: sendEmail(user['email'], createEmail(content, user['name'], user['country'], user['state'], user['county'], countryData, countyData), config, outcome)
+for user in userData: sendEmail(user['email'], createEmail(content, user['email'], user['name'], user['country'], user['state'], user['county'], countryData, countyData), config, outcome)
 print(f'{outcome[0]} email(s) sent, {outcome[1]} email(s) failed to send.')
