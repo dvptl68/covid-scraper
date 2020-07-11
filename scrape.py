@@ -152,9 +152,9 @@ def processEmail(userData, config):
 
           # Get email body
           try: body = part.get_payload(decode=True).decode()
-          except: pass
+          except: continue
 
-          # Skip rest of loop if content type is not plain text
+          # Skip rest of loop if content type is plain text
           if content_type == 'text/plain': continue
 
           # Add user to corresponding list
@@ -197,7 +197,7 @@ def connectDB(userData, removeUser, config):
   
   # Remove users who unsubscribed
   print('Removing old data...')
-  for user in removeUser: cursor.execute('DELETE FROM userData WHERE email={} AND name={} AND country={} AND state={} AND county={}'.format(user['email'], user['name'], user['country'], user['state'], user['county']))
+  for user in removeUser: cursor.execute('DELETE FROM userData WHERE email=\'{}\' AND name=\'{}\' AND country=\'{}\' AND state=\'{}\' AND county=\'{}\''.format(user['email'], user['name'], user['country'], user['state'], user['county']))
 
   # Commit changes to database
   db.commit()
