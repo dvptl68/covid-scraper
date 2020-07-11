@@ -188,16 +188,16 @@ def connectDB(userData, removeUser, config):
   # Set database cursor
   cursor = db.cursor()
 
-  # Remove users who unsubscribed
-  print('Removing old data...')
-  for user in removeUser: cursor.execute('DELETE FROM userData WHERE email={} AND name={} AND country={} AND state={} AND county={}'.format(user['email'], user['name'], user['country'], user['state'], user['county']))
-
   # Insert user data into database for each user
   print('Writing new data to database...')
   for user in userData:
     command = 'INSERT INTO userData (email, name, country, state, county) VALUES (%s, %s, %s, %s, %s)'
     values = (user['email'], user['name'], user['country'], user['state'], user['county'])
     cursor.execute(command, values)
+  
+  # Remove users who unsubscribed
+  print('Removing old data...')
+  for user in removeUser: cursor.execute('DELETE FROM userData WHERE email={} AND name={} AND country={} AND state={} AND county={}'.format(user['email'], user['name'], user['country'], user['state'], user['county']))
 
   # Commit changes to database
   db.commit()
@@ -310,10 +310,10 @@ with open('config.json') as configFile: config = json.load(configFile)
 userData = []
 
 # Get user data from email inbox
-# removeUser = processEmail(userData, config)
+removeUser = processEmail(userData, config)
 
 # Add user registrations to database
-# connectDB(userData, removeUser, config)
+connectDB(userData, removeUser, config)
 
 # Get email HTML content
 with open('email.html') as emailHTML: content = emailHTML.read()
