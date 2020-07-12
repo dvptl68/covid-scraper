@@ -312,10 +312,10 @@ with open('config.json') as configFile: config = json.load(configFile)
 userData = []
 
 # Get user data from email inbox
-removeUser = processEmail(userData, config)
+# removeUser = processEmail(userData, config)
 
 # Add user registrations to database
-connectDB(userData, removeUser, config)
+# connectDB(userData, removeUser, config)
 
 # Get email HTML content
 with open('email.html') as emailHTML: content = emailHTML.read()
@@ -323,5 +323,5 @@ with open('email.html') as emailHTML: content = emailHTML.read()
 # Send emails to users
 print('Sending all emails...')
 outcome = [0, 0]
-for user in userData: sendEmail(user['email'], createEmail(content, user['email'], user['name'], user['country'], user['state'], user['county'], countryData, countyData), config, outcome)
+# for user in userData: sendEmail(user['email'], createEmail(content, user['email'], user['name'], user['country'], user['state'], user['county'], countryData, countyData), config, outcome)
 print(f'{outcome[0]} email(s) sent, {outcome[1]} email(s) failed to send.')
