@@ -256,7 +256,7 @@ def createEmail(content, email, name, country, state, county, countryData, count
   newContent += content.replace('#LOCATION#', county + ' (' + extension + '), ' + state).replace('#CASES#', countyData[state][county][0]).replace('#DEATHS#', countyData[state][county][1]).replace('#RECOVERIES#', countyData[state][county][2])
 
   # Add unsubscribe link
-  newContent += f'<div style=\'display: inline;\'><a href=\'covid19reports.epizy.com/php/unsubscribe.php?email={email}&name={name}&country={country}&state={state}&county={county}\' style=\'text-align: center;\'>Unsubscrbe</a></div>'
+  newContent += f'<div style=\'display: inline;\><p style=\'text-align: center;\'><a href=\'covid19reports.epizy.com/php/unsubscribe.php?email={email}&name={name}&country={country}&state={state}&county={county}\'>Unsubscribe</a></p></div>'
 
   # Return new content
   return newContent
