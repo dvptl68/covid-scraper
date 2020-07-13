@@ -225,23 +225,33 @@ def connectDB(userData, removeUser, config):
 # CREATE TABLE userData (id INT AUTO_INCREMENT PRIMARY KEY, email TEXT NOT NULL, name TEXT NOT NULL, country TEXT NOT NULL, state TEXT, county TEXT);
 # INSERT INTO userData (email, name, country, state, county) VALUES ('example@email.com', '', '', '', '');
 
-# Function ot create email content specific to each user
-def createEmail(content, email, name, country, state, county, countryData, countyData):
+# Helper function for createEmail
+def calcData(new, old):
+  
+  try: floatNew = float(new.replace(',', ''))
+  except: return new
+  try: floatOld = float(old.replace(',', ''))
+  except: return new
+
+  return f'{old} ({((floatNew - floatOld) / floatOld) * 100}% increase)'
+
+# Function to create email content specific to each user
+def createEmail(content, email, name, country, state, county, countryData, countyData, oldCountryData, oldCountyData):
 
   # Add title text
-  newContent = f'<div style=\'display: inline;\'><h1 style=\'text-align: center;\'>Hello, {name}. Your daily COVID-19 report is here.</h1></div>'
+  newContent = f'<div style=\'display: inline;\'><h1 style=\'text-align: center;\'>Hello, {name}. Your daily COVID-19 report is here.</h1><p style=\'text-align: center; font-size: larger;\'>Percentage increases are calculated relative to yesterday\'s data.</p></div>'
 
   # Add worldwide data
-  newContent += content.replace('#LOCATION#', 'Worldwide').replace('#CASES#', countryData['Total'][0]).replace('#DEATHS#', countryData['Total'][1]).replace('#RECOVERIES#', countryData['Total'][2])
+  newContent += content.replace('#LOCATION#', 'Worldwide').replace('#CASES#', calcData(countryData['Total'][0], oldCountryData['Total'][0])).replace('#DEATHS#', calcData(countryData['Total'][1], oldCountryData['Total'][1])).replace('#RECOVERIES#', calcData(countryData['Total'][2], oldCountryData['Total'][2]))
 
   # Add country data
-  newContent += content.replace('#LOCATION#', country).replace('#CASES#', countryData[country][0]).replace('#DEATHS#', countryData[country][1]).replace('#RECOVERIES#', countryData[country][2])
+  newContent += content.replace('#LOCATION#', country).replace('#CASES#', calcData(countryData[country][0], oldCountryData[country][0])).replace('#DEATHS#', calcData(countryData[country][1], oldCountryData[country][1])).replace('#RECOVERIES#', calcData(countryData[country][2], oldCountryData[country][2]))
 
   # Return new content if state is not selected
   if state == '': return newContent
 
   # Add state data
-  newContent += content.replace('#LOCATION#', state).replace('#CASES#', countyData[state]['Total'][0]).replace('#DEATHS#', countyData[state]['Total'][1]).replace('#RECOVERIES#', countyData[state]['Total'][2])
+  newContent += content.replace('#LOCATION#', state).replace('#CASES#', calcData(countyData[state]['Total'][0], oldCountyData[state]['Total'][0])).replace('#DEATHS#', calcData(countyData[state]['Total'][1], oldCountyData[state]['Total'][1])).replace('#RECOVERIES#', calcData(countyData[state]['Total'][2], oldCountyData[state]['Total'][2]))
 
   # Return new content if county is not selected
   if county == '': return newContent
@@ -253,10 +263,10 @@ def createEmail(content, email, name, country, state, county, countryData, count
   elif state == 'Rhode Island': extension = 'municipality'
 
   # Add county data
-  newContent += content.replace('#LOCATION#', county + ' (' + extension + '), ' + state).replace('#CASES#', countyData[state][county][0]).replace('#DEATHS#', countyData[state][county][1]).replace('#RECOVERIES#', countyData[state][county][2])
+  newContent += content.replace('#LOCATION#', county + ' (' + extension + '), ' + state).replace('#CASES#', calcData(countyData[state][county][0], oldCountyData[state][county][0])).replace('#DEATHS#', calcData(countyData[state][county][1], oldCountyData[state][county][1])).replace('#RECOVERIES#', calcData(countyData[state][county][2], oldCountyData[state][county][2]))
 
   # Add unsubscribe link
-  newContent += f'<div style=\'display: inline;\><p style=\'text-align: center;\'><a href=\'covid19reports.epizy.com/php/unsubscribe.php?email={email}&name={name}&country={country}&state={state}&county={county}\'>Unsubscribe</a></p></div>'
+  newContent += f'<div style=\'display: inline;\'><p style=\'text-align: center; margin-top: 50px;\'><a href=\'http://covid19reports.epizy.com/php/unsubscribe.php?email={email}&name={name}&country={country}&state={state}&county={county}\'>Unsubscribe</a></p></div>'
 
   # Return new content
   return newContent
@@ -330,5 +340,7 @@ with open('email.html') as emailHTML: content = emailHTML.read()
 # Send emails to users
 print('Sending all emails...')
 outcome = [0, 0]
-# for user in userData: sendEmail(user['email'], createEmail(content, user['email'], user['name'], user['country'], user['state'], user['county'], countryData, countyData), config, outcome)
+# for user in userData: sendEmail(user['email'], createEmail(content, user['email'], user['name'], user['country'], user['state'], user['county'], countryData, countyData, oldCountryData, oldCountyData), config, outcome)
 print(f'{outcome[0]} email(s) sent, {outcome[1]} email(s) failed to send.')
+
+with open('test.html', 'w') as test: test.write(createEmail(content, 'fake', 'Nick', 'United States', 'Ohio', 'Franklin', countryData, countyData, oldCountryData, oldCountyData))
