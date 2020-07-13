@@ -298,9 +298,16 @@ with open('locations/us-states.json') as stateFile: states = json.load(stateFile
 # Fill counties dict with data from file
 with open('locations/us-counties.json') as countyFile: allCounties = json.load(countyFile)
 
-# Dicts to store scraped data
+# Dicts to store old and currently scraped data
+oldCountryData = {}
+oldCountyData = {}
 countryData = {}
 countyData = {}
+
+# Get old data from files
+print('Reading old data from files...')
+with open('data/country-data.json') as read: oldCountryData = json.load(read)
+with open('data/state-data.json') as read: oldCountyData = json.load(read)
 
 # Scrape and store all data
 scrape(countyData, countryData, states, allCounties)
