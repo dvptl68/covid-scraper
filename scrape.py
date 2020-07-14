@@ -233,7 +233,8 @@ def calcData(new, old):
   try: floatOld = float(old.replace(',', ''))
   except: return new
 
-  return f'{old} ({((floatNew - floatOld) / floatOld) * 100}% increase)'
+  calc = '{:.2f}'.format(((floatNew - floatOld) / floatOld) * 100)
+  return f'{old} ({calc}% increase)'
 
 # Function to create email content specific to each user
 def createEmail(content, email, name, country, state, county, countryData, countyData, oldCountryData, oldCountyData):
@@ -342,5 +343,3 @@ print('Sending all emails...')
 outcome = [0, 0]
 # for user in userData: sendEmail(user['email'], createEmail(content, user['email'], user['name'], user['country'], user['state'], user['county'], countryData, countyData, oldCountryData, oldCountyData), config, outcome)
 print(f'{outcome[0]} email(s) sent, {outcome[1]} email(s) failed to send.')
-
-with open('test.html', 'w') as test: test.write(createEmail(content, 'fake', 'Nick', 'United States', 'Ohio', 'Franklin', countryData, countyData, oldCountryData, oldCountyData))
