@@ -1,8 +1,9 @@
 # [COVID-19 Web Scraper](http://covid19reports.epizy.com/) :email:
-An automated web scraper that sends you daily COVID-19 data report emails.
+An automated web scraper that sends you daily COVID-19 data report emails.  
+
+***The code for the sign-up website can be found [here](https://github.com/dvptl68/covid-scraper-website).***
 
 ![Email](images/email-screenshot.jpg)
-
 ## How to sign up:
 Visit [this website](http://covid19reports.epizy.com/) to sign up to receive daily COVID-19 data report emails. You will be asked to select a country and enter your name and email. If you select the United States, you may also (optionally) select a state and county.  
   
