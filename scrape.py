@@ -5,6 +5,7 @@ import smtplib
 import imaplib
 import email.message
 import mysql.connector
+import os
 
 # ALL FUNCTIONS
 
@@ -106,8 +107,8 @@ def scrape(countyData, countryData, states, allCounties):
 
   # Write data to JSON files
   print('Writing data to files...')
-  with open('data/country-data.json', 'w') as out: out.write(json.dumps(countryData, indent=2))
-  with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
+  with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'country-data.json'), 'w') as out: out.write(json.dumps(countryData, indent=2))
+  with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'state-data.json'), 'w') as out: out.write(json.dumps(countyData, indent=2))
 
 # Function to read emails and process registrations
 def processEmail(userData, config):
@@ -304,10 +305,10 @@ def sendEmail(recipient, content, config, outcome):
 print('Retrieving required information...')
 
 # Fill states dict with data from file
-with open('locations/us-states.json') as stateFile: states = json.load(stateFile)
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'locations', 'us-states.json')) as stateFile: states = json.load(stateFile)
 
 # Fill counties dict with data from file
-with open('locations/us-counties.json') as countyFile: allCounties = json.load(countyFile)
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'locations', 'us-counties.json')) as countyFile: allCounties = json.load(countyFile)
 
 # Dicts to store old and currently scraped data
 oldCountryData = {}
@@ -317,14 +318,14 @@ countyData = {}
 
 # Get old data from files
 print('Reading old data from files...')
-with open('data/country-data.json') as read: oldCountryData = json.load(read)
-with open('data/state-data.json') as read: oldCountyData = json.load(read)
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'country-data.json')) as read: oldCountryData = json.load(read)
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'state-data.json')) as read: oldCountyData = json.load(read)
 
 # Scrape and store all data
 scrape(countyData, countryData, states, allCounties)
 
 # Fill config with data from file
-with open('config.json') as configFile: config = json.load(configFile)
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.json')) as configFile: config = json.load(configFile)
 
 # List to store user data
 userData = []
@@ -336,7 +337,7 @@ userData = []
 # connectDB(userData, removeUser, config)
 
 # Get email HTML content
-with open('email.html') as emailHTML: content = emailHTML.read()
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'email.html')) as emailHTML: content = emailHTML.read()
 
 # Send emails to users
 print('Sending all emails...')
