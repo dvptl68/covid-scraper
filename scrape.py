@@ -106,8 +106,8 @@ def scrape(countyData, countryData, states, allCounties):
 
   # Write data to JSON files
   print('Writing data to files...')
-  # with open('data/country-data.json', 'w') as out: out.write(json.dumps(countryData, indent=2))
-  # with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
+  with open('data/country-data.json', 'w') as out: out.write(json.dumps(countryData, indent=2))
+  with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
 
 # Function to read emails and process registrations
 def processEmail(userData, config):
