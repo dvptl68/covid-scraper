@@ -15,7 +15,7 @@ def getData(url): return BeautifulSoup(requests.get(url).content, 'html.parser')
 def getCountryData(countryData):
 
   # Get main data table from Wikipedia main COVID-19 page
-  countryTable = getData('https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data').find('table')
+  countryTable = getData('https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data').find(id='thetable')
 
   # Find total worldwide data and add to dict
   countryData.update({'Total': list(map(lambda x: x.getText(strip=True), countryTable.find(class_='sorttop').findAll('th')[2:]))[:3]})
@@ -106,8 +106,8 @@ def scrape(countyData, countryData, states, allCounties):
 
   # Write data to JSON files
   print('Writing data to files...')
-  with open('data/country-data.json', 'w') as out: out.write(json.dumps(countryData, indent=2))
-  with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
+  # with open('data/country-data.json', 'w') as out: out.write(json.dumps(countryData, indent=2))
+  # with open('data/state-data.json', 'w') as out: out.write(json.dumps(countyData, indent=2))
 
 # Function to read emails and process registrations
 def processEmail(userData, config):
@@ -330,10 +330,10 @@ with open('config.json') as configFile: config = json.load(configFile)
 userData = []
 
 # Get user data from email inbox
-removeUser = processEmail(userData, config)
+# removeUser = processEmail(userData, config)
 
 # Add user registrations to database
-connectDB(userData, removeUser, config)
+# connectDB(userData, removeUser, config)
 
 # Get email HTML content
 with open('email.html') as emailHTML: content = emailHTML.read()
@@ -341,5 +341,5 @@ with open('email.html') as emailHTML: content = emailHTML.read()
 # Send emails to users
 print('Sending all emails...')
 outcome = [0, 0]
-for user in userData: sendEmail(user['email'], createEmail(content, user['email'], user['name'], user['country'], user['state'], user['county'], countryData, countyData, oldCountryData, oldCountyData), config, outcome)
+# for user in userData: sendEmail(user['email'], createEmail(content, user['email'], user['name'], user['country'], user['state'], user['county'], countryData, countyData, oldCountryData, oldCountyData), config, outcome)
 print(f'{outcome[0]} email(s) sent, {outcome[1]} email(s) failed to send.')
