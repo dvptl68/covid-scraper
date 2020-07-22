@@ -109,6 +109,8 @@ def scrape(countyData, countryData, states, allCounties):
   print('Writing data to files...')
   with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'country-data.json'), 'w') as out: out.write(json.dumps(countryData, indent=2))
   with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'state-data.json'), 'w') as out: out.write(json.dumps(countyData, indent=2))
+  with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'country-data.jsonp'), 'w') as out: out.write(f'countries = {json.dumps(countryData, indent=2)}')
+  with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'state-data.jsonp'), 'w') as out: out.write(f'states = {json.dumps(countyData, indent=2)}')
 
 # Function to read emails and process registrations
 def processEmail(userData, config):
@@ -331,10 +333,10 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.json'
 userData = []
 
 # Get user data from email inbox
-removeUser = processEmail(userData, config)
+# removeUser = processEmail(userData, config)
 
 # Add user registrations to database
-connectDB(userData, removeUser, config)
+# connectDB(userData, removeUser, config)
 
 # Get email HTML content
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'email.html')) as emailHTML: content = emailHTML.read()
@@ -342,5 +344,5 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'email.html')
 # Send emails to users
 print('Sending all emails...')
 outcome = [0, 0]
-for user in userData: sendEmail(user['email'], createEmail(content, user['email'], user['name'], user['country'], user['state'], user['county'], countryData, countyData, oldCountryData, oldCountyData), config, outcome)
+# for user in userData: sendEmail(user['email'], createEmail(content, user['email'], user['name'], user['country'], user['state'], user['county'], countryData, countyData, oldCountryData, oldCountyData), config, outcome)
 print(f'{outcome[0]} email(s) sent, {outcome[1]} email(s) failed to send.')

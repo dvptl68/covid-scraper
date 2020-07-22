@@ -94,3 +94,7 @@ html {
   border: 1px solid #2796C2;
   border-radius: 4px;
 }
+
+#main-container {
+  position: absolute;
+}
