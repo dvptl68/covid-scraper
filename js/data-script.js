@@ -25,10 +25,12 @@ const setPositions = () => {
   const titleBlock = document.getElementById('title-block');
   const infoBlock = document.getElementById('info-block');
   const mainContainer = document.getElementById('main-container');
+  const dataContainer = document.getElementById('data-container');
 
   // Set vertical position of elements
   infoBlock.style.top = `${titleBlock.clientHeight}px`;
   mainContainer.style.top = `${titleBlock.clientHeight + infoBlock.clientHeight}px`;
+  dataContainer.style.top = `${titleBlock.clientHeight + infoBlock.clientHeight + mainContainer.clientHeight}px`;
 };
 
 // Set initial position of elements
@@ -91,10 +93,10 @@ const fillCounties = state => {
 }
 
 // Get state and county rows and separators
-const stateRow = document.getElementById('state-row');
-const stateSep = document.getElementById('state-sep');
-const countyRow = document.getElementById('county-row');
-const countySep = document.getElementById('county-sep');
+const stateRow = document.getElementsByClassName('state-row');
+const stateSep = document.getElementsByClassName('state-sep');
+const countyRow = document.getElementsByClassName('county-row');
+const countySep = document.getElementsByClassName('county-sep');
 
 // Change display based on country selections made
 countrySelect.addEventListener('change', event => {
@@ -103,13 +105,17 @@ countrySelect.addEventListener('change', event => {
   const country = event.target.value;
 
   // Hide/show state and county selection based on the selected country
-  stateRow.style.display = (country === 'United States') ? 'flex' : 'none';
-  stateSep.style.display = (country === 'United States') ? 'flex' : 'none';
-  countyRow.style.display = 'none';
-  countySep.style.display = 'none';
+  for (let i = 0; i < 2; i++){
+    stateRow.item(i).style.display = (country === 'United States') ? 'flex' : 'none';
+    stateSep.item(i).style.display = (country === 'United States') ? 'flex' : 'none';
+    countyRow.item(i).style.display = 'none';
+    countySep.item(i).style.display = 'none';
+  }
 
   // Reset selections
   stateSelect.children[0].selected = true;
+
+  setPositions();
 });
 
 // Change display based on state selections made
@@ -119,11 +125,13 @@ stateSelect.addEventListener('change', event => {
   const state = event.target.value;
 
   // Hide/show county selection based on the selected state
-  countyRow.style.display = (state !== '' && state !== 'Utah') ? 'flex' : 'none';
-  countySep.style.display = (state !== '' && state !== 'Utah') ? 'flex' : 'none';
+  for (let i = 0; i < 2; i++){
+    countyRow.item(i).style.display = (state !== '' && state !== 'Utah') ? 'flex' : 'none';
+    countySep.item(i).style.display = (state !== '' && state !== 'Utah') ? 'flex' : 'none';
+  }
 
   // Skip rest of function if selected state is Utah or none
-  if (state === '' || state =='Utah') return;
+  if (state === '' || state =='Utah') { setPositions(); return; }
 
   // Set section name depending on state
   let sectionName = 'County';
@@ -132,11 +140,13 @@ stateSelect.addEventListener('change', event => {
   else if (state === 'Rhode Island') sectionName = 'Municipality';
 
   // Set county selection label text
-  document.getElementById('county-label').innerHTML = `${sectionName} in ${state} (optional):`;
+  document.getElementById('county-label').innerHTML = `${sectionName} in ${state}:`;
 
   // Fill county selections
   fillCounties(state);
 
   // Reset selection
   countySelect.children[0].selected = true;
+
+  setPositions();
 });

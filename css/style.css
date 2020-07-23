@@ -12,9 +12,9 @@ Color scheme:
 #DE985E
 */
 
-/* [class*="container"] { border: 2px black solid; }
+[class*="container"] { border: 2px black solid; }
 .row { border: 2px red solid; }
-[class*="col"] { border: 2px blue solid; } */
+[class*="col"] { border: 2px blue solid; }
 
 html {
   user-select: none;
@@ -96,5 +96,9 @@ html {
 }
 
 #main-container {
+  position: absolute;
+}
+
+#data-container {
   position: absolute;
 }

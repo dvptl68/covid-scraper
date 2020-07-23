@@ -5,7 +5,7 @@
 <head>
 
   <!-- Title of webpage -->
-  <title>Daily COVID-19 Reports</title>
+  <title>COVID-19 Data Search</title>
 
   <!-- Webpage favicon -->
   <link rel='shortcut icon' type='image/x-icon' href='images/icon.ico' />
@@ -70,10 +70,10 @@
     </div>
 
     <!-- Separator row -->
-    <div id='state-sep' class='row' style='height: 20px; display: none'></div>
+    <div class='row state-sep' style='height: 20px; display: none'></div>
 
     <!-- Row for state selection -->
-    <div id='state-row' class='row' style='display: none'>
+    <div class='row state-row' style='display: none'>
 
       <!-- Separator column -->
       <div class='col'></div>
@@ -81,7 +81,7 @@
       <div class='col-auto'>
 
         <!-- State selection -->
-        <label class='labels'>U.S. State (optional):</label>
+        <label class='labels'>U.S. State:</label>
         <select id='state-select' class='lists'>
 
         </select>
@@ -94,10 +94,10 @@
     </div>
 
     <!-- Separator row -->
-    <div id='county-sep' class='row' style='height: 20px; display: none'></div>
+    <div class='row county-sep' style='height: 20px; display: none'></div>
 
     <!-- Row for county selection -->
-    <div id='county-row' class='row' style='display: none'>
+    <div class='row county-row' style='display: none'>
 
       <!-- Separator column -->
       <div class='col'></div>
@@ -118,6 +118,57 @@
     </div>
 
   </div>
+
+  <!-- Container to show data -->
+  <div id='data-container' class='container-fluid'>
+
+    <!-- Separator row -->
+    <div class='row' style='height: 30px'></div>
+
+    <!-- Row for country selection -->
+    <div class='row'>
+
+      <!-- Separator column -->
+      <div class='col'></div>
+
+      <div class='col-auto'></div>
+
+      <!-- Separator column -->
+      <div class='col'></div>
+
+    </div>
+
+    <!-- Separator row -->
+    <div class='row state-sep' style='height: 20px; display: none'></div>
+
+    <!-- Row for state selection -->
+    <div class='row state-row' style='display: none'>
+
+      <!-- Separator column -->
+      <div class='col'></div>
+
+      <div class='col-auto'></div>
+
+      <!-- Separator column -->
+      <div class='col'></div>
+
+    </div>
+
+    <!-- Separator row -->
+    <div class='row county-sep' style='height: 20px; display: none'></div>
+
+    <!-- Row for county selection -->
+    <div class='row county-row' style='display: none'>
+
+      <!-- Separator column -->
+      <div class='col'></div>
+
+      <div class='col-auto'></div>
+
+      <!-- Separator column -->
+      <div class='col'></div>
+
+    </div>
 
   </div>
 
