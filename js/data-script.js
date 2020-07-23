@@ -25,12 +25,10 @@ const setPositions = () => {
   const titleBlock = document.getElementById('title-block');
   const infoBlock = document.getElementById('info-block');
   const mainContainer = document.getElementById('main-container');
-  const dataContainer = document.getElementById('data-container');
 
   // Set vertical position of elements
   infoBlock.style.top = `${titleBlock.clientHeight}px`;
   mainContainer.style.top = `${titleBlock.clientHeight + infoBlock.clientHeight}px`;
-  dataContainer.style.top = `${titleBlock.clientHeight + infoBlock.clientHeight + mainContainer.clientHeight}px`;
 };
 
 // Set initial position of elements
@@ -52,7 +50,7 @@ countrySelect.appendChild(usa);
 
 // Iterate through sorted countries, adding them to list
 Object.keys(countries).sort().forEach(country => {
-  if (country === 'United States' || country == 'Total') return;
+  if (country === 'United States' || country === 'Total') return;
   const opt = document.createElement('OPTION');
   opt.innerHTML = country;
   countrySelect.appendChild(opt);
@@ -85,7 +83,7 @@ const fillCounties = state => {
 
   // Fill selection list with currect counties
   Object.keys(states[state]).sort().forEach(county => {
-    if (county == 'Total') return;
+    if (county === 'Total') return;
     const opt = document.createElement('OPTION');
     opt.innerHTML = county;
     countySelect.appendChild(opt);
@@ -114,6 +112,10 @@ countrySelect.addEventListener('change', event => {
 
   // Reset selections
   stateSelect.children[0].selected = true;
+  document.getElementById('state-info').innerHTML = '';
+
+  // Update country data
+  document.getElementById('country-info').innerHTML = (country !== '') ? `<strong>${country}</strong><br>Cases: ${countries[country][0]}<br>Recoveries: ${countries[country][2]}<br>Deaths: ${countries[country][1]}` : '';
 
   setPositions();
 });
@@ -129,6 +131,9 @@ stateSelect.addEventListener('change', event => {
     countyRow.item(i).style.display = (state !== '' && state !== 'Utah') ? 'flex' : 'none';
     countySep.item(i).style.display = (state !== '' && state !== 'Utah') ? 'flex' : 'none';
   }
+
+  // Update state data
+  document.getElementById('state-info').innerHTML = (state !== '') ? `<strong>${state}</strong><br>Cases: ${states[state]['Total'][0]}<br>Recoveries: ${states[state]['Total'][2]}<br>Deaths: ${states[state]['Total'][1]}` : '';
 
   // Skip rest of function if selected state is Utah or none
   if (state === '' || state =='Utah') { setPositions(); return; }
@@ -147,6 +152,10 @@ stateSelect.addEventListener('change', event => {
 
   // Reset selection
   countySelect.children[0].selected = true;
+  document.getElementById('county-info').innerHTML = '';
 
   setPositions();
 });
+
+// Change display based on county selections made
+countySelect.addEventListener('change', event => document.getElementById('county-info').innerHTML = (event.target.value !== '') ? `<strong>${event.target.value}</strong><br>Cases: ${states[stateSelect.value][event.target.value][0]}<br>Recoveries: ${states[stateSelect.value][event.target.value][2]}<br>Deaths: ${states[stateSelect.value][event.target.value][1]}` : '');
