@@ -56,3 +56,15 @@ Object.keys(countries).sort().forEach(country => {
   countrySelect.appendChild(opt);
 });
 
+// Get state selection list
+const stateSelect = document.getElementById('state-select');
+
+// Add blank element to list
+stateSelect.appendChild(document.createElement('OPTION'));
+
+// Iterate through the sorted states, adding them to list
+Object.keys(states).sort().forEach(state => {
+  const opt = document.createElement('OPTION')
+  opt.innerHTML = state;
+  stateSelect.appendChild(opt);
+});
