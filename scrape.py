@@ -109,8 +109,8 @@ def scrape(countyData, countryData, states, allCounties):
   print('Writing data to files...')
   with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'country-data.json'), 'w') as out: out.write(json.dumps(countryData, indent=2))
   with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'state-data.json'), 'w') as out: out.write(json.dumps(countyData, indent=2))
-  with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'country-data.jsonp'), 'w') as out: out.write(f'countries = {json.dumps(countryData, indent=2)}')
-  with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'state-data.jsonp'), 'w') as out: out.write(f'states = {json.dumps(countyData, indent=2)}')
+  with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'country-data.js'), 'w') as out: out.write(f'countries = {json.dumps(countryData, indent=2)}')
+  with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'state-data.js'), 'w') as out: out.write(f'states = {json.dumps(countyData, indent=2)}')
 
 # Function to read emails and process registrations
 def processEmail(userData, config):
