@@ -90,6 +90,9 @@ const fillCounties = state => {
   });
 }
 
+// Update total data
+document.getElementById('total-info').innerHTML = `<strong>Worldwide</strong><br>Cases: ${countries['Total'][0]}<br>Recoveries: ${countries['Total'][2]}<br>Deaths: ${countries['Total'][1]}`;
+
 // Get state and county rows and separators
 const stateRow = document.getElementsByClassName('state-row');
 const stateSep = document.getElementsByClassName('state-sep');
@@ -158,4 +161,4 @@ stateSelect.addEventListener('change', event => {
 });
 
 // Change display based on county selections made
-countySelect.addEventListener('change', event => document.getElementById('county-info').innerHTML = (event.target.value !== '') ? `<strong>${event.target.value}</strong><br>Cases: ${states[stateSelect.value][event.target.value][0]}<br>Recoveries: ${states[stateSelect.value][event.target.value][2]}<br>Deaths: ${states[stateSelect.value][event.target.value][1]}` : '');
+countySelect.addEventListener('change', event => document.getElementById('county-info').innerHTML = (event.target.value !== '') ? `<strong>${event.target.value}, ${stateSelect.value}</strong><br>Cases: ${states[stateSelect.value][event.target.value][0]}<br>Recoveries: ${states[stateSelect.value][event.target.value][2]}<br>Deaths: ${states[stateSelect.value][event.target.value][1]}` : '');
