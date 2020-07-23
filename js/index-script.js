@@ -48,3 +48,11 @@ const usa = document.createElement('OPTION');
 usa.innerHTML = 'United States'
 countrySelect.appendChild(usa)
 
+// Iterate through sorted countries, adding them to list
+Object.keys(countries).sort().forEach(country => {
+  if (country === 'United States' || country == 'Total') return;
+  const opt = document.createElement('OPTION')
+  opt.innerHTML = country;
+  countrySelect.appendChild(opt);
+});
+
