@@ -11,6 +11,8 @@ If you register twice with different selections and the same email you will rece
   
 Every email has an unsubscribe link at the bottom, so you can opt-out of every location you register to receive emails for.
 
+***Note: Due to Wikipedia constantly changing the HTML format of its data tables, the web scraper has to be maintained periodically. Currently, the data table for Florida is causing issues, and no emails will be sent until the issue is resolved.***
+
 ## How it works:
 
 ![Script](images/terminal-screenshot.jpg)
